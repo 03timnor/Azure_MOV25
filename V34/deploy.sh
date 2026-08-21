@@ -1,4 +1,4 @@
-# Automatiserad provisionering av Novatrix kundtjänstmiljö
+# Automatiserad konfiguration av Novatrix webbserver
 
 set -e
 

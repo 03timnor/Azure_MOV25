@@ -265,7 +265,7 @@ az vm show -d \
 
 ### *__3. Verifiering__*
 
-Sidan kan nås via den publika sidan med den korrekta html konfigurationen.
+Sidan kan nås via publik IP och har den korrekta html konfigurationen.
 
 ![alt text](VM_och_RG_VG.png)
 ![alt text](Nginx_Status_VG.png)
