@@ -1,0 +1,46 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+
+write_files:
+  - path: /var/www/html/index.html
+    owner: root:root
+    permissions: '0644'
+    content: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <title>Novatrix</title>
+      <style>
+      html { color-scheme: light dark; }
+      body { width: 35em; margin: 0 auto; font-family: Tahoma, Verdana, Arial, sans-serif; }
+      </style>
+      </head>
+      <body>
+      <h1>Novatrix</h1>
+      <form action="skicka.php" method="POST">
+        <div>
+          <label for="namn">Namn:</label><br>
+          <input type="text" id="namn" name="namn" required>
+        </div>
+      
+        <div>
+          <label for="epost">E-post:</label><br>
+          <input type="email" id="epost" name="epost" required>
+        </div>
+      
+        <div>
+          <label for="meddelande">Meddelande:</label><br>
+          <textarea id="meddelande" name="meddelande" rows="5" cols="30" placeholder="Skriv ditt meddelande..." required></textarea>
+        </div>
+      
+        <button type="submit">Skicka</button>
+      </form>
+      </body>
+      </html>
+
+runcmd:
+  - systemctl enable --now nginx
