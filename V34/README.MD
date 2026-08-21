@@ -4,20 +4,22 @@ __Repository:__ https://github.com/03timnor/Azure_MOV25
 
 _Tim Noreliusson Lingestedt, 2026-08-20_
 
-### *__1. Skapa GitHub Repository __*
+### *__1. Skapa GitHub Repository__*
 
-GitHub Repository `Azure_MOV25` skapat. Kommer att användas under hela denna Azure kursen.
+GitHub Repository `Azure_MOV25` skapat. Kommer att användas under hela Azure kursen.
 
 GitHub Repository `Azure_MOV25` kommer husera all kod och versionshantering under Azure Kursen.
 
 ![alt text](GitHub.png)
 
-### *__1. Resursgrupp och VM__*
+### *__2. Resursgrupp och VM__*
+
 Skapat Resource Group `rg-novatrix-V34` via Azure Portalen.
 
 Skapat VM i Azure Portalen, VM finns i Resource Group `rg-novatrix-V34` och VM heter `VM-Novatrix-WEB`
 
-VM har OS `Ubuntu Server LTS 24.04 - x64 Gen2`
+VM har OS `Ubuntu Server LTS 24.04 - x64 Gen2`.
+
 Storlek på VM är `B2ats_v2`.
 
 Portar `80 (HTTP)` och `22 (SSH)` är öppna för inkommande trafik.
@@ -26,9 +28,9 @@ __*Resultat:*__
 
 ![alt text](VM_och_RG.png)
 
-### *__2. SSH__*
-SSH nyckel genererad, SSH nyckel nerladdad.
-Behörighet till nycklen gavs via Terminal.
+### *__3. SSH__*
+
+SSH nyckel genererad, SSH nyckel nerladdad. Behörighet till nycklen gavs via Terminal.
 
 Loggade in på servern.
 
@@ -48,9 +50,11 @@ __*Resultat:*__
 
 ![alt text](SSH_Inloggad.png)
 
-### *__3. Serverkonfiguration__*
+### *__4. Serverkonfiguration__*
 
 Uppdaterade operativsystemet.
+
+Uppdaterade operativsystem innbär bättre säkerhet.
 
 ```
 sudo apt update
@@ -63,9 +67,11 @@ __*Resultat:*__
 
 ![alt text](Ubuntu_Uppdaterat.png)
 
-### *__4. Nginx__*
+### *__5. Nginx__*
 
 Installerade Nginx.
+
+Nginx är webbservern som hemsidan hostas på.
 
 ```bash
 sudo apt install nginx
@@ -132,7 +138,7 @@ __*Resultat:*__
 
 ![alt text](Novatrix_Hemsida.png)
 
-### *__5. Verifiering__*
+### *__6. Verifiering__*
 
 Novatrix hemsida visas när man surfar till den lokala IP adressen.
 
