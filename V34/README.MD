@@ -4,6 +4,8 @@ __Repository:__ https://github.com/03timnor/Azure_MOV25
 
 _Tim Noreliusson Lingestedt, 2026-08-20_
 
+Uppgiften som skall utföras denna vecka (V34) är att skapa GitHub Repository, skapa VM med Ubuntu Server via Azure, konfigurera Ubuntu Server, starta upp en Nginx server och skapa en enklel kundtjänst hemsida med html.
+
 ### *__1. Skapa GitHub Repository__*
 
 GitHub Repository `Azure_MOV25` skapat. Kommer att användas under hela Azure kursen.
@@ -146,7 +148,7 @@ Skärmbild på detta hittas i föregående steg (*__4. Driftsättning__*).
 
 # __Novatrix, driftsättning av webbserver i Azure (Väl Godkänt)__
 
-Uppgiften som skall lösas är att automatisera lösningen för Godkänt delen med `Azure CLI` script eller `cloud-init` fil.
+Uppgiften som skall lösas är att automatisera lösningen för Godkänt delen (förutom GitHub) med `Azure CLI` script eller `cloud-init` fil.
 
 Nedan lösning använder sig av båda för en helt automatiserad process.
 
