@@ -46,11 +46,9 @@ Birger och Sven använder specitfika användarkonton när de arbetar med olika s
 
 ### Säkerhetsgrupper som används till "*__Role-based access control (RBAC)__*" och anledningen av tilldelningen av specifika roller:
 
-Säkerhetsgrupp "*__azure_developer__*" - Får rollen "*__Reader__*" för att de inte har behov av att utföra några ändringar i skarp miljö, men de behöver ha möjlighet att se hur den ser ut.
-
 Säkerhetsgrupp "*__azure_operations__*" - "*__Contributor__*". - Får rollen "*__Contributor__*" då de behöver kunna ändra i resursgruppen för att utföra sitt arbete. De behöver till exempel kunna starta om en VM i skarp miljö. De behöver dock inte tilldela roller i "*__Azure RBAC__*" då "*__IAM__*" avdelningen sköter detta arbete.
 
-Säkerhetsgrupper används som standard för "*__Role-based access control (RBAC)__*" då det möjliggör för bättre skalbarhet, säkerhet och spårbarhet än att ge enskila användarkonton roller eller behörigheter.
+Säkerhetsgrupper används som standard för "*__Role-based access control (RBAC)__*" då det möjliggör för bättre skalbarhet, säkerhet och spårbarhet än att ge enskilda användarkonton roller eller behörigheter.
 
 
 ### *__5. Verifiering__*
