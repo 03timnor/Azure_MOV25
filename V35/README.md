@@ -25,3 +25,11 @@ En "*__azure_developer__*" (utvecklare) säkerhetsgrupp och en "*__azure_operati
 ![alt text](groups_operations_users.png)
 
 ### *__2. Tilldela behörigheter (RBAC)__*
+
+Behörigheter till resursgrupp "*__rg_novatrix_V35__*" styrs via  "*__Role-based access control (RBAC)__*" som hanteras via säkerhetsgrupperna som skapades tidigare.
+
+Medlemmar i "*__azure_developer__*" har ha rollen "*__Reader__*" och 
+medlemmar i "*__azure_operations__*" har rollen "*__Contributor__*". Tilldelningen gjordes via portalen. 
+
+![alt text](role_assignments.png)
+

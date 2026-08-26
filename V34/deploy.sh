@@ -2,7 +2,7 @@
 
 set -e
 
-RESOURCE_GROUP="rg-novatrix-V34"
+RESOURCE_GROUP="rg-novatrix-V35"
 LOCATION="swedencentral"
 VM_NAME="VM-Novatrix-Web"
 VM_SIZE="Standard_B2ats_v2"
