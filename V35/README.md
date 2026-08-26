@@ -4,11 +4,11 @@ __Repository:__ https://github.com/03timnor/Azure_MOV25
 
 *Tim Noreliusson Lingestedt, 2026-08-20*
 
-Denna veckans uppgift går ut på att hantera identiter och åtkomst (*__IAM__*) i en Azure miljö enligt "*__Least privilege__*" principen. Utöver detta skall vi förbereda en identitet för en applikation som skall användas senare i kursen.
+Denna veckans uppgift går ut på att hantera identiter och åtkomst (*__IAM__*) i en *__Azure__* miljö enligt "*__Least privilege__*" principen. Utöver detta skall vi förbereda en identitet till en applikation som skall användas senare i kursen.
 
 ### *__1. Skapa identiteter__*
 
-Två användare och två säkerhetsgrupper har skapats i Entra via portalen.
+Två användare och två säkerhetsgrupper har skapats i *__Entra__* via portalen.
 
 Ett "*__Developer__*" (utvecklare) konto och ett "*__Operations__*" (drift) konto har skapats.
 
@@ -42,14 +42,15 @@ medlemmar i "*__azure_operations__*" har rollen "*__Contributor__*". Tilldelning
 Lösningen bygger på "*__Least privilege__*" principen.
 Användarkonton skall inte ha mer behörigheter än de som är nödvändiga för att utföra arbetsuppgifterna.
 
-Birger och Sven använder specitfika användarkonton när de arbetar med olika saker i *__Azure__* vilket leder till en minskad "*__Blast Radius__*" ifall ett konto skulle hackat / stulet.
+Birger och Sven använder specifika användarkonton när de arbetar med olika saker i *__Azure__* vilket leder till en minskad "*__Blast Radius__*" ifall ett konto skulle hackat / stulet.
 
 ### Säkerhetsgrupper som används till "*__Role-based access control (RBAC)__*" och anledningen av tilldelningen av specifika roller:
 
-Säkerhetsgrupp "*__azure_operations__*" - "*__Contributor__*". - Får rollen "*__Contributor__*" då de behöver kunna ändra i resursgruppen för att utföra sitt arbete. De behöver till exempel kunna starta om en VM i skarp miljö. De behöver dock inte tilldela roller i "*__Azure RBAC__*" då "*__IAM__*" avdelningen sköter detta arbete.
+Säkerhetsgrupp "*__azure_developer__*" - Får rollen "*__Reader__*" för att de inte har behov av att utföra några ändringar i skarp miljö, men de behöver ha möjlighet att se den.
+
+Säkerhetsgrupp "*__azure_operations__*" - Får rollen "*__Contributor__*" då de behöver kunna ändra i resursgruppen för att utföra sitt arbete. De behöver till exempel kunna starta om en VM i skarp miljö. De behöver dock inte tilldela roller i "*__Azure RBAC__*" då "*__IAM__*" avdelningen sköter detta arbete.
 
 Säkerhetsgrupper används som standard för "*__Role-based access control (RBAC)__*" då det möjliggör för bättre skalbarhet, säkerhet och spårbarhet än att ge enskilda användarkonton roller eller behörigheter.
-
 
 ### *__5. Verifiering__*
 
@@ -58,7 +59,7 @@ Ett konto som är medlem i "*__azure_developer__*" har rollen "*__Reader__*" och
 Om ett konto som är medlem i "*__azure_developer__*" försöker stänga av VM i resursgrupp "*__rg_novatrix_V35__*" så får man följande meddelande:
 ![alt text](developer_restrictions.png)
 
-Ett konto som är medlem i "*__azure_operations__*" har rollen "*__Contributor__*" och skall kunna se och ändra innehåll i  "*__rg_novatrix_V35__*". Men rollen "*__Contributor__*" ger inte rättigheter att tilldela roller i "*__Azure RBAC__*"
+Ett konto som är medlem i "*__azure_operations__*" har rollen "*__Contributor__*" och skall kunna se och ändra innehåll i  "*__rg_novatrix_V35__*". Men rollen "*__Contributor__*" ger inte rättigheter att tilldela roller i "*__Azure RBAC__*".
 
 Ett konto som är medlem i "*__azure_operations__*" kan stänga av och starta VM i resursgrupp "*__rg_novatrix_V35__*"
 ![alt text](operations_stop_and_start_VM.png)
