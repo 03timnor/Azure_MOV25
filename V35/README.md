@@ -28,8 +28,29 @@ En "*__azure_developer__*" (utvecklare) säkerhetsgrupp och en "*__azure_operati
 
 Behörigheter till resursgrupp "*__rg_novatrix_V35__*" styrs via  "*__Role-based access control (RBAC)__*" som hanteras via säkerhetsgrupperna som skapades tidigare.
 
-Medlemmar i "*__azure_developer__*" har ha rollen "*__Reader__*" och 
+Medlemmar i "*__azure_developer__*" har rollen "*__Reader__*" och 
 medlemmar i "*__azure_operations__*" har rollen "*__Contributor__*". Tilldelningen gjordes via portalen. 
 
 ![alt text](role_assignments.png)
+![alt text](birger_check_access_result.png)
+![alt text](sven_check_access_result.png)
+
+### *__3. Förbered en identitet för appen__*
+
+### *__4. Dokumentation__*
+
+### *__5. Verifiering__*
+
+Ett konto som ör medlem i "*__azure_developer__*" har rollen "*__Reader__*" och skall endast kunna se "*__rg_novatrix_V35__*" och dess innehåll. Inte kunna ändra något.
+
+Om ett konto som är medlem i "*__azure_developer__*" försöker stänga av VM i resursgrupp "*__rg_novatrix_V35__*" så får man följande meddelande:
+![alt text](developer_restrictions.png)
+
+Ett konto som är medlem i "*__azure_operations__*" har rollen "*__Contributor__*" och skall kunna se och ändra innehåll i  "*__rg_novatrix_V35__*". Men rollen "*__Contributor__*" ger inte rättigheter att tilldela roller i "*__Azure RBAC__*"
+
+Ett konto som är medlem i "*__azure_operations__*" kan stänga av och starta VM i resursgrupp "*__rg_novatrix_V35__*"
+![alt text](operations_stop_and_start_VM.png)
+
+Försöker ett konto som är medlem i "*__azure_operations__*" tilldela roller i "*__Azure RBAC__*" så är den funktionen inaktiverad.
+![alt text](operations_add_role_assignment_disabled.png)
 
