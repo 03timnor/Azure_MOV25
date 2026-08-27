@@ -37,6 +37,10 @@ medlemmar i "*__azure_operations__*" har rollen "*__Contributor__*". Tilldelning
 
 ### *__3. Förbered en identitet för appen__*
 
+Skapade en managed identity via portalen.
+
+![alt text](managed_identity.png)
+
 ### *__4. Dokumentation__*
 
 Lösningen bygger på "*__Least privilege__*" principen.
