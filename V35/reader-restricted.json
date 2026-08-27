@@ -1,0 +1,18 @@
+{
+  "Name": "Overview Tab Only Reader",
+  "IsCustom": true,
+  "Description": "Allows users to view the resource Overview page and metadata, but blocks sub-settings, deep configurations, and IAM.",
+  "Actions": [
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/subscriptions/resources/read"
+  ],
+  "NotActions": [
+    "Microsoft.Authorization/*",
+    "Microsoft.Insights/*"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/SUBSCRIPTION-ID/resourceGroups/RESOURCE-GROUP"
+  ]
+}

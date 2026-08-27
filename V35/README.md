@@ -71,3 +71,9 @@ Ett konto som är medlem i "*__azure_operations__*" kan stänga av och starta VM
 Försöker ett konto som är medlem i "*__azure_operations__*" tilldela roller i "*__Azure RBAC__*" så är den funktionen inaktiverad.
 ![alt text](operations_add_role_assignment_disabled.png)
 
+# __IAM och identitet (Väl Godkänt)__
+
+Uppgiften som skall lösas är att automatisera behörighetsuppsättningen med *__Azure CLI__* samt att designa en genomtänkt "*__Least privilege__*" modell med flera roller.
+
+### *__5. Least privilege__*
+

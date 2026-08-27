@@ -1,0 +1,19 @@
+{
+  "Name": "contributor-deny_delete_and_iam",
+  "IsCustom": true,
+  "Description": "Allows creation and modification of resources, but completely blocks IAM/RBAC access and resource deletion.",
+  "Actions": [
+    "*"
+  ],
+  "NotActions": [
+    "*/delete",
+    "Microsoft.Authorization/*",
+    "Microsoft.Resources/subscriptions/resourceGroups/delete"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/SUBSCRIPTION-ID/resourceGroups/RESOURCE-GROUP"
+  ]
+}
+
