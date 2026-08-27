@@ -124,7 +124,7 @@ Kod för rollen *__contributor-deny_delete_and_iam__*:
   ]
 }
 ```
-Script för att skapa rollerna i resursgruppen i Azure är följande:
+Script för att skapa rollerna i resursgruppen i *__Azure__* är följande:
 
 ```bash
 #!/bin/bash
@@ -195,7 +195,65 @@ Tredje försöket att installera *__jq__* gjordes med kommando: `winget install 
 ![alt text](contributor_deny_delete_and_iam.png)
 ![alt text](reader_restricted.png)
 
+### *__2. Skapa säkerhetsgrupper__*
 
+Script för att skapa säkerhetsgrupper i *__Entra__* är följande:
+
+```bash
+# 1. Define your group properties
+GROUP_DISPLAY_NAME="placeholder"
+GROUP_MAIL_NICKNAME="placeholder"
+
+echo "Creating security group '$GROUP_DISPLAY_NAME' with mail nickname '$GROUP_MAIL_NICKNAME'..."
+
+# 2. Create the security group
+az ad group create \
+  --display-name "$GROUP_DISPLAY_NAME" \
+  --mail-nickname "$GROUP_MAIL_NICKNAME"
+```
+
+Script körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*Placeholder*" värden på steg 1 till sin egna data för att köra scriptet korrekt.
+
+![alt text](create_security_group.png)
+
+"*placeholder*" gruppen är till för att visa att detta script fungerade, de andra grupperna var redan skapade sedan tidigare.
+
+### *__3. Tilldela medlemskap i säkerhetsgrupperna__*
+
+### *__4. Tilldela rollerna till säkerhetsgrupperna__*
+
+Script för att tilldela roller på säkerhetsgrupperna i resursgruppen är följande:
+
+```bash
+# 1. Prevent Git Bash path parsing corruptions
+export MSYS_NO_PATHCONV=1
+
+# 2. Define your exact targets
+RG_NAME="placeholder"
+GROUP_NAME="placeholder"
+ROLE_NAME="placeholder"
+
+# 3. Pull required parameters dynamically from your current session
+SUB_ID=$(az account show --query id --output tsv)
+GROUP_OBJECT_ID=$(az ad group show --group "$GROUP_NAME" --query id --output tsv)
+SCOPE_PATH="/subscriptions/$SUB_ID/resourceGroups/$RG_NAME"
+
+echo "Assigning role '$ROLE_NAME' to group '$GROUP_NAME'..."
+
+# 4. Map the assignment
+az role assignment create \
+  --assignee-object-id "$GROUP_OBJECT_ID" \
+  --assignee-principal-type "Group" \
+  --role "$ROLE_NAME" \
+  --scope "$SCOPE_PATH"
+```
+Script körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*Placeholder*" värden på steg 2 till sin egna data för att köra scriptet korrekt.
+
+![alt text](role_assignments_vg.png)
+
+### *__5. Dokumentation__*
+
+### *__6. Verifiering__*
 
 
 

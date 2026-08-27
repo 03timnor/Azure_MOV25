@@ -6,7 +6,7 @@ set -e
 
 # 1. Define your local file name and target Resource Group
 JSON_FILE="placeholder.json"
-RG_NAME="rg-placeholder"
+RG_NAME="placeholder"
 ROLE_NAME="placeholder"
 
 # Check if the JSON file actually exists locally
