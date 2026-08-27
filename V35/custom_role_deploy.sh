@@ -1,12 +1,13 @@
 #!/bin/bash
+export MSYS_NO_PATHCONV=1
 
 # Exit immediately if any command fails
 set -e
 
 # 1. Define your local file name and target Resource Group
-JSON_FILE="name.json"
-RG_NAME="RESOURCE-GROUP"
-ROLE_NAME="ROLE-NAME"
+JSON_FILE="placeholder.json"
+RG_NAME="rg-placeholder"
+ROLE_NAME="placeholder"
 
 # Check if the JSON file actually exists locally
 if [ ! -f "$JSON_FILE" ]; then
@@ -22,7 +23,7 @@ if [ -z "$SUBSCRIPTION_ID" ]; then
     echo "Error: Not logged into Azure. Please run 'az login' first."
     exit 1
 fi
-echo "Found active Subscription ID: $SUBSCRIPTION_ID"
+az account set --subscription "$SUBSCRIPTION_ID"
 
 # 3. Use jq to dynamically inject the correct scope into the JSON file
 echo "Updating AssignableScopes inside $JSON_FILE..."

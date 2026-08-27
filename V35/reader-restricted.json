@@ -1,5 +1,5 @@
 {
-  "Name": "Overview Tab Only Reader",
+  "Name": "reader-restricted",
   "IsCustom": true,
   "Description": "Allows users to view the resource Overview page and metadata, but blocks sub-settings, deep configurations, and IAM.",
   "Actions": [
