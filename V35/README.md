@@ -303,11 +303,11 @@ Detta då det kan leda till att saker tas bort av misstag eller att någon obeh�
 Säkerhetsgrupper används som standard för *__Role-based access control (RBAC)__* då det möjliggör för bättre skalbarhet, säkerhet och spårbarhet än att ge enskilda användarkonton roller eller behörigheter.
 
 Roller appliceras alltid på resursgruppen och inte på hela prenumerationen. 
-En check minst en gång i månaden på vilka behörigheter som är utdelade till vilka görs som rutin. Där inaktuella och felaktika tilldelningar tas bort. Slutar någon som har konton med höga behrigheter tas de kontona bort så fort som möjligt.
+En check minst en gång i månaden på vilka behörigheter som är utdelade till vilka görs som rutin. Där inaktuella och felaktiga tilldelningar tas bort. Slutar någon som har konton med höga behrigheter tas de kontona bort så fort som möjligt.
 
 Alla dessa rutiner, modeller, principer och arbetssätt leder till en säkrare miljö som snabbt kan skalas efter behov.
 
-Om *__Novatrix__* lägger till fler team och saker behöver skalas så kan man snabbt göra nya roller via script, göra nya säkerhetsgrupper via script och dela koppla roller till säkerhetsgrupperna via script och tilldela medlemskap i säkerhetsgrupperna via script.
+Om *__Novatrix__* lägger till fler team och saker behöver skalas så kan man snabbt göra nya roller via script, göra nya säkerhetsgrupper via script, koppla roller till säkerhetsgrupperna via script och tilldela medlemskap i säkerhetsgrupperna via script.
 Detta leder till en snabb, effektiv och säker skalning. Där allt sker enligt samma standard. Allt skall såklart dokumenteras också.
 
 ### *__6. Verifiering__*
