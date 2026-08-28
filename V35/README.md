@@ -18,7 +18,6 @@ En *__azure_developer__* (utvecklare) säkerhetsgrupp och en *__azure_operations
 *__Developer__* kontot är med i *__azure_developer__* (utvecklare) säkerhetsgruppen och *__Operations__* kontot är med i *__azure_operations__* säkerhetsgruppen. Tilldelingen gjordes manuellt via portalen.
 
 *__Resultat:__*
-
 ![alt text](users.png)
 ![alt text](groups.png)
 ![alt text](groups_developer_users.png)
@@ -37,13 +36,13 @@ medlemmar i *__azure_operations__* har rollen *__Contributor__*. Tilldelningen g
 
 ### *__3. Förbered en identitet för appen__*
 
-Skapade en managed identity via portalen.
+Skapade en *__Managed identity__* via portalen.
 
 ![alt text](managed_identity.png)
 
 ### *__4. Dokumentation__*
 
-Lösningen bygger på *__Least privilege__* principen.
+Lösningen bygger på "*__Least privilege__*" principen.
 Användarkonton skall inte ha mer behörigheter än de som är nödvändiga för att utföra arbetsuppgifterna.
 
 Birger och Sven använder specifika användarkonton när de arbetar med olika saker i *__Azure__* vilket leder till en minskad "*__Blast Radius__*" ifall ett konto skulle hackat / stulet.
@@ -124,7 +123,7 @@ Kod för rollen *__contributor-deny_delete_and_iam__*:
   ]
 }
 ```
-Script för att skapa rollerna i resursgruppen i *__Azure__* är följande:
+Script (*__custom_role_deploy.sh__*) för att skapa rollerna i resursgruppen i *__Azure__* är följande:
 
 ```bash
 #!/bin/bash
@@ -135,7 +134,7 @@ set -e
 
 # 1. Define your local file name and target Resource Group
 JSON_FILE="placeholder.json"
-RG_NAME="rg-placeholder"
+RG_NAME="placeholder"
 ROLE_NAME="placeholder"
 
 # Check if the JSON file actually exists locally
@@ -177,7 +176,7 @@ fi
 ```
 Scriptet (*__custom_role_deploy.sh__*) körs via *__bash__* terminalen via *__Visual Studio Code__* som är kopplat till *__Azure__* miljön.
 Scriptet använder sig av *__jq__* för att kunna ändra i *__JSON__* datan och addera dynamiskt innehåll som till exempel *__Subscription-ID__* och namnet på resursgruppen.
-Man behöver ändra alla "*Placeholder*" värden på steg 1 till sin egna data för att köra scriptet korrekt.
+Man behöver ändra alla "*placeholder*" värden på steg 1 till sin egen data för att köra scriptet korrekt.
 
 För att detta skulle fungera var man tvungen att installera *__jq__* så *__bash__* terminalen via *__Visual Studio Code__* kunde hantera *__jq__* kommandon.
 
@@ -197,7 +196,7 @@ Tredje försöket att installera *__jq__* gjordes med kommando: `winget install 
 
 ### *__2. Skapa säkerhetsgrupper__*
 
-Script för att skapa säkerhetsgrupper i *__Entra__* är följande:
+Script (*__create_security_group.sh__*) för att skapa säkerhetsgrupper i *__Entra__* är följande:
 
 ```bash
 # 1. Define your group properties
@@ -212,7 +211,7 @@ az ad group create \
   --mail-nickname "$GROUP_MAIL_NICKNAME"
 ```
 
-Script körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*Placeholder*" värden på steg 1 till sin egna data för att köra scriptet korrekt.
+Script (*__create_security_group.sh__*) körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*placeholder*" värden på steg 1 till sin egen data för att köra scriptet korrekt.
 
 ![alt text](create_security_group.png)
 
@@ -220,9 +219,41 @@ Script körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver 
 
 ### *__3. Tilldela medlemskap i säkerhetsgrupperna__*
 
+Script (*__add_group_member.sh__*) för att tilldela medlemskap i säkerhetsgrupperna är följande:
+
+```bash
+# 1. Define group and array of user emails
+GROUP_NAME="placeholder"
+USER_EMAILS=("placeholder")
+
+# 2. Get Group ID
+GROUP_ID=$(az ad group show --group "$GROUP_NAME" --query id --output tsv)
+
+# 3. Loop through and add each user
+for email in "${USER_EMAILS[@]}"; do
+    echo "Processing $email..."
+    
+    # Get the user's Object ID based on the email address
+    USER_ID=$(az ad user show --id "$email" --query id --output tsv 2>/dev/null)
+    
+    if [ -n "$USER_ID" ]; then
+        echo "Adding user ID $USER_ID to group..."
+        az ad group member add --group "$GROUP_ID" --member-id "$USER_ID"
+    else
+        echo "Error: Could not find user with email $email"
+    fi
+done
+
+echo "All users successfully processed!"
+```
+Script (*__add_group_member.sh__*) körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*placeholder*" värden på steg 1 till sin egen data för att köra scriptet korrekt.
+
+![alt text](groups_developer_users_vg.png)
+![alt text](groups_operations_users_vg.png)
+
 ### *__4. Tilldela rollerna till säkerhetsgrupperna__*
 
-Script för att tilldela roller på säkerhetsgrupperna i resursgruppen är följande:
+Script (*__apply_role_to_group.sh__*) för att tilldela roller på säkerhetsgrupperna i resursgruppen är följande:
 
 ```bash
 # 1. Prevent Git Bash path parsing corruptions
@@ -247,13 +278,71 @@ az role assignment create \
   --role "$ROLE_NAME" \
   --scope "$SCOPE_PATH"
 ```
-Script körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*Placeholder*" värden på steg 2 till sin egna data för att köra scriptet korrekt.
+Script (*__apply_role_to_group.sh__*) körs i *__bash__* terminalen via *__Visual Studio Code__*. Man behöver ändra alla "*placeholder*" värden på steg 2 till sin egen data för att köra scriptet korrekt.
 
 ![alt text](role_assignments_vg.png)
 
-### *__5. Dokumentation__*
+### *__5. Dokumentation och motivering__*
+
+Även här bygger lösningen på "*__Least privilege__*" principen.
+Användarkonton skall inte ha mer behörigheter än de som är nödvändiga för att utföra arbetsuppgifterna.
+
+Birger och Sven använder specifika användarkonton när de arbetar med olika saker i *__Azure__* vilket leder till en minskad "*__Blast Radius__*" ifall ett konto skulle hackat / stulet.
+
+Säkerhetsgrupp *__azure_developer__* - Får rollen *__reader-restricted__* som är baserad på rollen *__Reader__* för att de inte har behov av att utföra några ändringar i skarp miljö, och inget behov av att se så många detaljer. Företaget har tidigare haft en säkerhetsincident där någon läckte uppgifter till en känslig reursgrupp till obehöriga. Därför har man valt att skärpa ner denna rollen ganska rejält. *__Developer__* gruppen behöver dock fortfarande kunna se att reursgruppen finns.
+
+Det är därför de får denna mer resriktiva roll. Skulle de behöva mer behörigheter i 
+framtiden eller andra behörigheter så är det enkelt att justera i *__JSON__* filen för att skapa en en ny roll med andra behörigheter och koppla den till säkerhetsgruppen.
+Rollen *__reader-restricted__* kan se resursgruppen och gå in på den men ger inte behörighet till att varken läsa eller ändra utöver det.
+
+Säkerhetsgrupp *__azure_operations__* - Får rollen *__contributor-deny_delete_and_iam__* som är baserad på rollen *__Contributor__* då de behöver kunna ändra i resursgruppen för att utföra sitt arbete. De behöver till exempel kunna stoppa en VM i skarp miljö. De behöver dock inte se detaljer i *__Azure RBAC__* då *__IAM__* avdelningen sköter detta arbete. Samt minskar det risken för att dessa uppgifter läcks.
+
+De behöver heller inte ha tillgång till att ta bort resursgruppen eller objekt i den. 
+Detta då det kan leda till att saker tas bort av misstag eller att någon obehörig får kontroll över kontot och saboterar miljön.
+
+Säkerhetsgrupper används som standard för *__Role-based access control (RBAC)__* då det möjliggör för bättre skalbarhet, säkerhet och spårbarhet än att ge enskilda användarkonton roller eller behörigheter.
+
+Roller appliceras alltid på resursgruppen och inte på hela prenumerationen. 
+En check minst en gång i månaden på vilka behörigheter som är utdelade till vilka görs som rutin. Där inaktuella och felaktika tilldelningar tas bort. Slutar någon som har konton med höga behrigheter tas de kontona bort så fort som möjligt.
+
+Alla dessa rutiner, modeller, principer och arbetssätt leder till en säkrare miljö som snabbt kan skalas efter behov.
+
+Om *__Novatrix__* lägger till fler team och saker behöver skalas så kan man snabbt göra nya roller via script, göra nya säkerhetsgrupper via script och dela koppla roller till säkerhetsgrupperna via script och tilldela medlemskap i säkerhetsgrupperna via script.
+Detta leder till en snabb, effektiv och säker skalning. Där allt sker enligt samma standard. Allt skall såklart dokumenteras också.
 
 ### *__6. Verifiering__*
+
+### Verifiering av att rollen *__contributor_deny_delete_and_iam__* fungerar.
+
+Test genomfört med ett konto som har rollen *__contributor_deny_delete_and_iam__* via medlemskap i säkerhetsgrupp *__azure_operations__*.
+
+Kan stoppa VM:
+![alt text](custom_role_stop_VM.png)
+
+Kan inte ta bort VM:
+![alt text](custom_role_delete_VM_denied.png)
+
+Kan inte se detaljer i *__IAM__* / *__RBAC__*:
+![alt text](custom_role_iam_access_denied_1.png)
+![alt text](custom_role_iam_access_denied_2.png)
+
+### Verifiering av att rollen *__reader-resrticted__* fungerar.
+
+Test genomfört med ett konto som har rollen *__reader-resrticted__* via medlemskap i säkerhetsgrupp *__azure_developer__*.
+
+Översiktssidan är tom:
+![alt text](custom_role_overview_empty.png)
+
+Kan inte ta bort resursgruppen:
+![alt text](custom_role_delete_rg_denied.png)
+
+Kan inte se detaljer i *__IAM__* / *__RBAC__*:
+![alt text](custom_role_iam_access_denied_3.png)
+![alt text](custom_role_iam_access_denied_4.png)
+
+
+
+
 
 
 
