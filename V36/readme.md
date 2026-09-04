@@ -218,6 +218,7 @@ az vm create \
   --custom-data cloud-init.yaml \
   --vnet-name "$VNET_NAME" \
   --subnet "$SUBNET_WEB_NAME" \
+  --nsg "$NSG_WEB_NAME" \
   --public-ip-sku Standard
 
 echo "Done! Public IP:"
