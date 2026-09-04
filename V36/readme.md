@@ -233,4 +233,20 @@ echo "az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GRO
 
 ### *__2. Verifiering__*
 
+Trafik (*__http__*) till webbserver via port 80 fungerar.
+
+![alt text](novatrix-website-(VG).png)
+
+Inloggning via *__Bastion__* fungerar.
+
+![alt text](bastion-ssh-login-success-(VG).png)
+
+*__Network Security Group (NSG)__* har skapats.
+
+![alt text](nsg-rules-(VG).png)
+
+Vanlig *__SSH__* fungerar inte.
+
+![alt text](ssh-login-failed-(VG).png)
+
 ### *__3. Dokumentation__*
