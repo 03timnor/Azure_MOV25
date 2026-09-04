@@ -106,7 +106,7 @@ Det nya scriptet `deploy_vm+network.sh` använder fortfarande `cloud-init.yaml` 
 
 set -e
 
-RESOURCE_GROUP="rg-novatrix-V35"
+RESOURCE_GROUP="rg-novatrix"
 LOCATION="swedencentral"
 VM_NAME="VM-Novatrix-Web"
 VM_SIZE="Standard_B2ats_v2"
@@ -197,14 +197,15 @@ az network public-ip create \
   --sku Standard \
   --location "$LOCATION"
 
-echo "Creating Azure Bastion host (Standard SKU, this can take several minutes)..."
+echo "Creating Azure Bastion host (Standard SKU with native client support, this can take several minutes)..."
 az network bastion create \
   --resource-group "$RESOURCE_GROUP" \
   --name "$BASTION_NAME" \
   --vnet-name "$VNET_NAME" \
   --public-ip-address "$BASTION_PIP_NAME" \
   --location "$LOCATION" \
-  --sku Standard
+  --sku Standard \
+  --enable-tunneling true
 
 echo "Creating virtual machine with cloud-init..."
 az vm create \
