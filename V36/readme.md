@@ -233,7 +233,7 @@ echo "az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GRO
 
 ### *__2. Verifiering__*
 
-Trafik (*__http__*) till webbserver via port 80 fungerar.
+Trafik (*__HTTP__*) till webbserver via port 80 fungerar.
 
 ![alt text](novatrix-website-(VG).png)
 
@@ -250,3 +250,48 @@ Vanlig *__SSH__* fungerar inte.
 ![alt text](ssh-login-failed-(VG).png)
 
 ### *__3. Dokumentation__*
+
+Bygger vidare på samma lösning som Godkänt delen men adderar *__Bastion__* för att kunna nå `VM-Novatrix-Web`.
+
+*__VNet__* `vnet-novatrix` address space är `10.0.0.0/16`
+*__VNet__* används för att ge möjligheten att segmentera resurser i olika subnät. Resurserna kan även få en privat IP istället för en publik och bli mindre sårbara.
+
+*__Bastion__* (*AzureBastionSubnet*) har address space: `10.0.3.0/26` finns i `vnet-novatrix`.
+
+*__Bastion__* gör till exempel så att målresursen inte behöver ha en publik IP och tar bort behovet för en regel för inkommande trafik för *__SSH__* på port 22.
+
+Subnät `snet-web` finns i `vnet-novatrix` med address space `10.0.1.0/24`. `VM-Novatrix-WEB` använder detta subnät. 
+
+Subnät `snet-db` finns i `vnet-novatrix` med address space `10.0.2.0/24`. Används inte just nu, skapats som förberedelse inför nästa veckas uppgift.
+
+Subnät används för att segmentera nätverket, man kan till exempel applicera olika *__Network Security Group (NSG)__* på olika subnät.
+
+I *__Network Security Group (NSG)__* `nsg-web` finns följande regler:
+
+`Allow-HTTP` - Tillåter inkommande TCP trafik på port 80. Detta behövs för att komma åt *__Novatrix__* hemsdia.
+
+`Allow-HTTPS` - Tillåter inkommande TCP trafik på port 443. Detta behövs för att komma åt *__Novatrix__* hemsdia.
+
+Vid behov kan man enkelt skala upp designen med till exempel fler subnät och fler *__Network Security Group (NSG)__*.
+
+### *__4. Hur designen förbättrar säkerheten__*
+
+*__1. Central åtkomstpunkt__*
+
+Samtlig administrativ åtkomst går via *__Bastion__* istället för flera olika ingångspunkter. Det ger även bättre spårbarhet då man kan se när någon har anslutit och vem det var.
+
+*__2. Brute force och portscanning__*
+
+Port 22 öppnas aldrig mot internet vilket resulterar i att man undviker de annars ständigt atomatiserade "*Brute force*" attackerna mot port 22 (*__SSH__*).
+
+*__3. Stulna SSH nycklar utger mindre risk__*
+
+Även om någon skulle få tag i *__SSH__* nycklarna så beöver dem också åtkomst till Azure prenumerationen för att kunna använda dem. Endast *__SSH__* nycklar räcker inte för att nå `VM-Novatrix-WEB` då det inte finns en direkt nätverksväg dit för att ansluta via *__SSH__*.
+
+*__4. Nätverkssegmentering, minskad "Blast radius"__*
+
+Genom att dela upp nätverket i olika subnät så begränsar det vad en angripare kan komma åt även om till exempel `VM-Novatrix-WEB` skulle bli hackad. Om vi till exempel skulle haft en databas i `snet-db` skulle inte den bli exponerad bara för att `VM-Novatrix-WEB` är nåbar utifrån.
+
+*__5. Minsta möjliga attackyta, (Least privilege)__*
+
+I *__Network Security Group (NSG)__* `nsg-web` tillåts endast den trafik som behövs och blockerar all annan trafik.
