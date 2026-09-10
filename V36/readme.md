@@ -98,7 +98,7 @@ Väl Godkänt delen av uppgiften denna vecka går ut på att göra Godkänt dele
 Scriptet `deploy.sh` från V34 har nu uppdaterats och innehåller och skapar nu även nätverksdesignen utöver skapandet av VM.
 Scriptet `deploy_vm+network.sh` automatiserar alltså steg 1 till 3 i Godkänt delen plus att det skapar resursgrupp och VM.
 
-Det nya scriptet `deploy_vm+network.sh` använder fortfarande `cloud-init.yaml` för att konfigurera Ubuntu Server på VM. Scriptet `deploy_vm+network.sh` körs via bash terminalen i *__Visual Studio Code__*.
+Det nya scriptet `deploy_vm+network.sh` använder fortfarande `cloud-init.yaml` för att konfigurera *__Ubuntu Server__* på `VM-Novatrix-Web`. Scriptet `deploy_vm+network.sh` körs via bash terminalen i *__Visual Studio Code__*.
 
 ```bash
 #!/usr/bin/env bash
@@ -256,7 +256,7 @@ Bygger vidare på samma lösning som Godkänt delen men adderar *__Bastion__* f�
 *__VNet__* `vnet-novatrix` address space är `10.0.0.0/16`
 *__VNet__* används för att ge möjligheten att segmentera resurser i olika subnät. Resurserna kan även få en privat IP istället för en publik och bli mindre sårbara.
 
-*__Bastion__* (*AzureBastionSubnet*) har address space: `10.0.3.0/26` finns i `vnet-novatrix`.
+*__Bastion__* (*AzureBastionSubnet*) har address space: `10.0.3.0/26` och finns i `vnet-novatrix`.
 
 *__Bastion__* gör till exempel så att målresursen inte behöver ha en publik IP och tar bort behovet för en regel för inkommande trafik för *__SSH__* på port 22.
 
@@ -270,7 +270,7 @@ I *__Network Security Group (NSG)__* `nsg-web` finns följande regler:
 
 `Allow-HTTP` - Tillåter inkommande TCP trafik på port 80. Detta behövs för att komma åt *__Novatrix__* hemsdia.
 
-`Allow-HTTPS` - Tillåter inkommande TCP trafik på port 443. Detta behövs för att komma åt *__Novatrix__* hemsdia.
+`Allow-HTTPS` - Tillåter inkommande TCP trafik på port 443.
 
 Vid behov kan man enkelt skala upp designen med till exempel fler subnät och fler *__Network Security Group (NSG)__*.
 

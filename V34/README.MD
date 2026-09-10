@@ -1,4 +1,4 @@
-# __Novatrix, driftsättning av webbserver i Azure (Godkänt)__
+# __Driftsättning av webbserver i Azure (Godkänt)__
 
 __Repository:__ https://github.com/03timnor/Azure_MOV25
 
