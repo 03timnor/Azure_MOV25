@@ -12,7 +12,6 @@ Två användare och två säkerhetsgrupper har skapats i *__Entra__* via portale
 
 Ett *__Developer__* (utvecklare) konto och ett *__Operations__* (drift) konto har skapats.
 
-
 En *__azure_developer__* (utvecklare) säkerhetsgrupp och en *__azure_operations__* (drift) säkerhetsgrupp har skapats.
 
 *__Developer__* kontot är med i *__azure_developer__* (utvecklare) säkerhetsgruppen och *__Operations__* kontot är med i *__azure_operations__* säkerhetsgruppen. Tilldelingen gjordes manuellt via portalen.
