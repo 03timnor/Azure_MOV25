@@ -536,7 +536,7 @@ Hemsida kan skicka ärenden:
 
 VM hanterade indentitet med *__RBAC__* fungerar:
 
-![alt text](vm_id.png)
+![alt text](vm_managed_id.png)
 
 ![alt text](vm_id_assignments.png)
 
