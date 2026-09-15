@@ -2,7 +2,7 @@
 
 Repository: https://github.com/03timnor/Azure_MOV25
 
-Tim Noreliusson Lingestedt, 2026-09-15
+*Tim Noreliusson Lingestedt, 2026-09-15*
 
 Veckans uppgift är att koppla en lagringstjänst till lösningen så att inskickade ärenden och bifogade filer sparas, på ett säkert sätt.
 
