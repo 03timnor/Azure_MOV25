@@ -298,7 +298,7 @@ echo "az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GRO
 
 Scriptet (*deploy_server+network+db_V1.sh*) körs via *__bash__* terminalen i *__Visual Studio Code__*.
 
-Scriptet (*deploy_server+network+db_V1.sh*) skapar en *__Managed Identity__* som hör till webbservern (VM) och som också får rollen *Storage Blob Data Contributor*. Webbserverns (VM) *__Managed Identity__* kopplas även till containern *arenden*. Detta gör att webbservern (VM) kan skriva till containern *arenden* utan att några nycklar behöver användas vilket leder till säkrare åtkomst.
+Scriptet (*deploy_server+network+db_V1.sh*) skapar en *__Managed Identity__* som hör till webbservern (VM) och som också får rollen *Storage Blob Data Contributor*. Webbserverns (VM) *__Managed Identity__* kopplas även till containern *"arenden"*. Detta gör att webbservern (VM) kan skriva till containern *"arenden"* utan att några nycklar behöver användas vilket leder till säkrare åtkomst.
 
 Scriptet (*deploy_server+network+db_V1.sh*) använder *cloud-init-yaml* för att konfigurera webbservern (VM) med en backend så att den kan skicka ärenden till storage.
 *cloud-init-yaml* innehåller följande kod:
@@ -563,6 +563,8 @@ Lagringstyp är *Blob storage*.
 Skrivning av filer till storage sker via webbserverns (VM) *__Managed Identity__*. Webbserverns (VM) *__Managed Identity__* har rollen *Storage Blob Data Contributor*
 
 # __Storage (Väl Godkänt)__
+
+Väl Godkänt delen av veckans uppgift går ut på att automatisera Godkänt delen, göra miljön säkrare med exempelvis *__Secure Endpoint__* och motivera olika val.
 
 ### *__1. Skapa lagring, koppla formuläret till lagringen och säkra åtkomsten__*
 
@@ -929,7 +931,7 @@ echo "az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GRO
 
 Scriptet (*deploy_server+network+db_V2.sh*) körs via *__bash__* terminalen i *__Visual Studio Code__*.
 
-Scriptet (*deploy_server+network+db_V2.sh*) skapar en *__Managed Identity__* som hör till webbservern (VM) och som också får rollen *Storage Blob Data Contributor*. Webbserverns (VM) *__Managed Identity__* kopplas även till containern *arenden*. Detta gör att webbservern (VM) kan skriva till containern *arenden* utan att några nycklar behöver användas vilket leder till säkrare åtkomst.
+Scriptet (*deploy_server+network+db_V2.sh*) skapar en *__Managed Identity__* som hör till webbservern (VM) och som också får rollen *Storage Blob Data Contributor*. Webbserverns (VM) *__Managed Identity__* kopplas även till containern *"arenden"*. Detta gör att webbservern (VM) kan skriva till containern *"arenden"* utan att några nycklar behöver användas vilket leder till säkrare åtkomst.
 
 Scriptet (*deploy_server+network+db_V2.sh*) skapar också en *__Private Endpoint__* vilket gör att publik nätverksåtkomst stängs av på storage kontot för icke godkända IP-adresser/enheter.
 
@@ -1198,19 +1200,19 @@ Autentiseringsmetod:
 
 ### *__3. Dokumentation och motivering__*
 
-Scriptet (*deploy_server+network+db_V1.sh*) och cloud-init (*cloud-init.yaml*) hanterar att uppsättning och konfiguration av miljön.
+Scriptet (*deploy_server+network+db_V2.sh*) och cloud-init (*cloud-init.yaml*) hanterar att uppsättning och konfiguration av miljön.
 
-Lagringstyp är *Blob storage*. *Blob storage* används då varje ärende är en kombination av strukturerad text  (en JSON med meddelande, e-post, namn och bifogad bild). Det är olika datatyper som behöver existera samtidigt. *Blob storage* kan hantera detta utan ett fast schema. En *__SQL__*-databas har inte den möjligheten.
+Lagringstyp är *Blob storage*. *Blob storage* används då varje ärende är en kombination av strukturerad text  (en JSON med meddelande, e-post, namn och bifogad bild). Det är olika datatyper som behöver kunna finnas samtidigt. *Blob storage* kan hantera detta utan ett fast schema. En *__SQL__*-databas har inte den möjligheten.
 
 *Blob storage* behöver ingen kapacitetsplanering, kontot växer per automatik när fler ärenden inkommer. *Blob storage* är billigare per *__gigabyte__* än en databaslösning när datan som hanteras är enkel och filbaserad. *Blob storage* även har inbyggt stöd för *__RBAC__* och *__Managed Identity__*.
 
-*__Access tier__* på filerna är av typen *Hot*. Att *Hot*-tier används beror på att användningsområdet för vad de andra tiers (*Cool*, *Cold* och *Archive*) är gjorda för. De som arbetar för *Novatrix Kundtjänst* arbetar med ärendena varje dag, det vill säga att de öppnar filerna väligt ofta. *Cool* och *Cold* har en lägre lagringskostnad men samtidigt en högre kostad för skrivning och läsning. Då detta är något som gjörs ofta i arbetet så blir detta mer kostsamt i längden.
+*__Access tier__* på filerna är av typen *Hot*. Att *Hot*-tier används beror på att användningsområdet för vad de andra tiers (*Cool*, *Cold* och *Archive*) är gjorda för. De som arbetar för *Novatrix Kundtjänst* arbetar med ärendena varje dag, det vill säga att de öppnar filerna väligt ofta. *Cool* och *Cold* har en lägre lagringskostnad men samtidigt en högre kostad för skrivning och läsning. Då detta är något som görs ofta i arbetet så blir detta mer kostsamt i längden.
 
 Datavolymen är i dagsläget liten. Ärendena är endast små *__JSON__* filer samt enstaka bilder. Detta innebär att den högre lagringskostaden per *__gigabyte__* som *Hot*-tier har ändå inte blir så hög. Detta kan dock komma att ändras om ärendemängden eller datan som tas emot ändras bör man ha i åtanke.
 
 *Archive*-tier är inget tänkbart alternativ, den behöver timmar av *Rehydration* innan en fil kan läsas. Detta fungerar inte för ett system som används "*live*".
 
-Skrivning av filer till storage sker via webbserverns (VM) *__Managed Identity__*. VM/Webbserverns *__Managed Identity__* har rollen *Storage Blob Data Contributor* vilket är en roll som roll som kan läsa och skriva. *Storage Blob Data Contributor* kan inte änra några inställningar på kontot eller ta bort kontot. VM/Webbservern har alltså endast tillgång till det som behövs, inte mer (*Least Privilege*).
+Skrivning av filer till storage sker via webbserverns (VM) *__Managed Identity__*. VM/Webbserverns *__Managed Identity__* har rollen *Storage Blob Data Contributor* vilket är en roll som kan läsa och skriva. *Storage Blob Data Contributor* kan inte ändra några inställningar på kontot eller ta bort kontot. VM/Webbservern har alltså endast tillgång till det som behövs, inte mer (*Least Privilege*).
 
 Inga kontonycklar används, så inga nycklar kan läckas. Inga hemligheter lagras i kod, vilket minskar risken för att hemligheter kan läckas.
 
