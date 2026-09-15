@@ -1220,6 +1220,6 @@ Skrivning av filer till storage sker via webbserverns (VM) *__Managed Identity__
 
 Inga kontonycklar används, så inga nycklar kan läckas. Inga hemligheter lagras i kod, vilket minskar risken för att hemligheter kan läckas.
 
-VM/Webbservern har endast åtkomst ill containern *"arenden"*. Inte hela storage kontot. Den har endast åtkomst till det som behövs (*Least Privilege*).
+VM/Webbservern har endast åtkomst till containern *"arenden"*. Inte hela storage kontot. Den har endast åtkomst till det som behövs (*Least Privilege*).
 
 *__Private Endpoint__* stänger ner åtkomst för alla enheter, förutom de som behöver det (VM/Webbserver och host dator). Detta gör att åtkomsten säkras och en potentiell attackyta blir mindre.
