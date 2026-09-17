@@ -564,7 +564,7 @@ az deployment sub create \
 
 Scriptet tar hjälp av följande cloud-init fil för konfiguration av Webbserver/VM:
 
-```bash
+```yaml
 #cloud-config
 # V37 Utokad: web VM that serves the Novatrix ticket form AND writes each
 # ticket to Blob Storage via the VM's system-assigned managed identity.
@@ -788,6 +788,27 @@ runcmd:
 ```
 
 ### *__2. Deploya från kod__*
+
+För att deploya template kör man följande kod i en *__bash__* terminal:
+
+```bash
+az deployment sub create \
+  --location swedencentral \
+  --template-file main.bicep \
+  --parameters main.bicepparam
+```
+
+För att ansluta till Webbserver/VM kör man följande kod i en *__PowerShell__* terminal:
+
+```powershell
+az network bastion ssh `
+  --name bastion-novatrix `
+  --resource-group rg-novatrix `
+  --target-resource-id (az vm show -g rg-novatrix -n VM-Novatrix-Web --query id -o tsv) `
+  --auth-type ssh-key `
+  --username azureuser `
+  --ssh-key "$HOME/.ssh/id_rsa"
+```
 
 ### *__3. Visa versionshantering__*
 
