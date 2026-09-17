@@ -12,3 +12,5 @@ så att hela miljön kan återskapas utan manuellt klickande.
 ### *__4. Verifiering__*
 
 ### *__5. Dokumentera__*
+
+# __IaC med templates (Väl Godkänt)__
