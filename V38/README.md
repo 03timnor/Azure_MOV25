@@ -158,10 +158,10 @@ param allowedIpAddress = 'placeholder'
 // --------------------------------------------------------------------------
 
 // param location = 'swedencentral'
-// resourceGroupName = 'rg-novatrix'
+// param resourceGroupName = 'rg-novatrix-test'
 // param vmAdminUsername = 'azureuser'
 // param vmSize = 'Standard_B2ats_v2'
-// vmName = 'VM-Novatrix-Web'
+// param vmName = 'VM-Novatrix-Web-test'
 // param vmImageSku = '22_04-lts-gen2'
 // param vnetName = 'vnet-novatrix'
 // param vnetAddressPrefix = '10.0.0.0/16'
