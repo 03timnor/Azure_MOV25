@@ -181,6 +181,8 @@ param allowedIpAddress = 'placeholder'
 // param containerName = 'arenden'
 ```
 
+Man måste byta ut "*placeholder*" till sin egna data för att script skall fungera korrekt.
+
 *resources.bicep*:
 
 ```bicep
