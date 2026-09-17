@@ -812,8 +812,8 @@ az network bastion ssh `
 
 ### *__3. Visa versionshantering__*
 
-### *__4. Verifiering__*
+### *__4. Dokumentera__*
 
-### *__5. Dokumentera__*
+### *__5. Verifiering__*
 
 # __IaC med templates (Väl Godkänt)__
