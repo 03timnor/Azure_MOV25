@@ -6,12 +6,12 @@ using 'main.bicep'
 // --------------------------------------------------------------------------
 
 // Your SSH public key, e.g. the contents of ~/.ssh/id_rsa.pub
-param sshPublicKey = 'your-key-here'
+param sshPublicKey = 'placeholder'
 
 // Object ID of the identity that should get Storage Blob Data Contributor
 // on the storage account, e.g.:
 //   az ad signed-in-user show --query id -o tsv
-param callerObjectId = '00000000-0000-0000-0000-000000000000'
+param callerObjectId = 'placeholder'
 
 // Your public IP address, allowed through the storage account firewall.
 // Find it with: curl -s https://ifconfig.me
