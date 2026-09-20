@@ -1,4 +1,4 @@
-# __IaC med templates__
+# __IaC med templates (Godkänt och Väl Godkänt)__
 
 Veckans uppgift går ut på att templates provisionera infrastrukturen runt ärendeformuläret på ett reproducerbart sätt, versionshanterat i GitHub,
 så att hela miljön kan återskapas utan manuellt klickande.
@@ -814,8 +814,39 @@ az network bastion ssh `
 
 ### *__3. Visa versionshantering__*
 
+Exempel på versionshantering:
+
+![alt text](version_control.png)
+
+Här aktiveras två utav parametrarna i *main.biceparm* och får nya värden.
+Man kan se hur scriptet har ändrats med hjälp av versionshanteringen i GitHub.
+
 ### *__4. Dokumentera__*
 
+
+
 ### *__5. Verifiering__*
+
+Deployment via script lyckades och allt är konfigurerat:
+
+![alt text](provisioning_success.png)
+
+![alt text](deployment_success.png)
+
+![alt text](rg_novatrix.png)
+
+![alt text](novatrix_website.png)
+
+![alt text](ticket_sent.png)
+
+![alt text](iam_storage.png)
+
+![alt text](container_contents_1.png)
+
+![alt text](container_contents_2.png)
+
+När man aktiverar och ändrar parametrar i *main.biceparm* så slår det igenom korrekt:
+
+![alt text](parameter_test.png)
 
 # __IaC med templates (Väl Godkänt)__
