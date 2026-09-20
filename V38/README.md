@@ -816,6 +816,8 @@ az network bastion ssh `
 
 Exempel på versionshantering:
 
+![alt text](commit.png)
+
 ![alt text](version_control.png)
 
 Här aktiveras två utav parametrarna i *main.biceparm* och får nya värden.
