@@ -839,7 +839,7 @@ Om man önskar att ändra någon parameter i scriptet som till exempel namn på 
 
 *resources.bicep* skapar alla resurser, och används automatiskt när man kör scriptet (*main.bicep*).
 
-Script använder *cloud-init.yaml* för atk konfigurera VM/webbserver,
+Script använder *cloud-init.yaml* för att konfigurera VM/webbserver,
 
 Alla script hjälper till att göra miljön säkrare för förändringar. Då man enkelt kan ändra parametrarna och inte behöver göta ett helt nytt script. Man man även använda scriptet om man skall skapa en annan typ av miljö. Man ändrar då parametrarna efter de behoven som finns, men använder samma script i grunden.
 
