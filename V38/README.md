@@ -825,7 +825,33 @@ Man kan se hur scriptet har ändrats med hjälp av versionshanteringen i GitHub.
 
 ### *__4. Dokumentera__*
 
+Scriptet (*main.bicep*) skapar upp hela miljön.
 
+Man kör scriptet (*main.bicep*) via följande kommando i en *__bash__* terminal (man måste stå i samma mapp som alla script finns i):
+
+```bash
+az deployment sub create \
+  --location swedencentral \
+  --template-file main.bicep \
+  --parameters main.bicepparam
+```
+Om man önskar att ändra någon parameter i scriptet som till exempel namn på resursgrupp eller vilken storlek VM skall vara så gör man det via *main.bicepparam* filen. Man tar bort *//* så att parametern inte längre är en kommentar och ändrar värdet inom *'* tecknen. Man sparar sedan *main.bicepparam* och kör *main.bicep* som vanligt. Vill man ändra tillbaka till standard värden så lägger man till *//* framför parametern och sparar *main.bicepparam*. *main.bicepparam* nvänds automatiskt när man kör scriptet (*main.bicep*).
+
+*resources.bicep* skapar alla resurser, och används automatiskt när man kör scriptet (*main.bicep*).
+
+Alla script hjälper till att göra miljön säkrare för förändringar. Då man enkelt kan ändra parametrarna och inte behöver göta ett helt nytt script. Man man även använda scriptet om man skall skapa en annan typ av miljö. Man ändrar då parametrarna efter de behoven som finns, men använder samma script i grunden.
+
+ör att ansluta till Webbserver/VM kör man följande kod i en *__PowerShell__* terminal:
+
+```powershell
+az network bastion ssh `
+  --name bastion-novatrix `
+  --resource-group rg-novatrix `
+  --target-resource-id (az vm show -g rg-novatrix -n VM-Novatrix-Web --query id -o tsv) `
+  --auth-type ssh-key `
+  --username azureuser `
+  --ssh-key "$HOME/.ssh/id_rsa"
+```
 
 ### *__5. Verifiering__*
 
@@ -850,5 +876,3 @@ Deployment via script lyckades och allt är konfigurerat:
 När man aktiverar och ändrar parametrar i *main.biceparm* så slår det igenom korrekt:
 
 ![alt text](parameter_test.png)
-
-# __IaC med templates (Väl Godkänt)__
