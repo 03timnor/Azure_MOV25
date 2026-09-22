@@ -843,7 +843,7 @@ Script använder *cloud-init.yaml* för att konfigurera VM/webbserver,
 
 Alla script hjälper till att göra miljön säkrare för förändringar. Då man enkelt kan ändra parametrarna och behöver inte göra ett helt nytt script. Man kan använda scriptet om man skall skapa en annan miljö som till exempel behöver en större VM storlek och andra namn. Man ändrar då parametrarna efter de behoven som finns, men använder samma script i grunden.
 
-*__OBS!__* Efter att *Pay as you go* har aktiverats på *__Azure__* kontot fungerar inte längre VM storleken *Standard_B2ats_v2*. Det enklaste är att ändra detta i *main.bicepparam* filen, enligt beskrivning ovan.
+*__OBS!__* Efter att *Pay as you go* har aktiverats på *__Azure__* kontot fungerar inte längre VM storleken *Standard_B2ats_v2*. Det enklaste är att ändra detta i *main.bicepparam* filen, enligt beskrivning ovan. Till exempel storlek *Standard_D2als_v6* fungerar okej. Alla bilder i verifieringen är tagna innan *Pay as you go* aktiverades.
 
 Scripten har fått beteckningen "*main*" då dem skapar upp standardmiljön.
 Om man vill göra nya script baserade på detta skulle en namnstandard kunna vara baserat på vilken vecka de är aktuella / skapade. Till exempel hade dennas veckas script blivit "*main-V38*" och nästa veckas "*main-V39*".
