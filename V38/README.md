@@ -823,7 +823,7 @@ Exempel på versionshantering:
 Här aktiveras två utav parametrarna i *main.biceparm* och får nya värden.
 Man kan se hur scriptet har ändrats med hjälp av versionshanteringen i GitHub.
 
-### *__4. Dokumentera__*
+### *__4. Dokumentation__*
 
 Scriptet (*main.bicep*) skapar upp hela miljön.
 
