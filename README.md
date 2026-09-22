@@ -14,5 +14,5 @@
 ## *__V37 - Storage__*
 [/V37/README.md](https://github.com/03timnor/Azure_MOV25/tree/main/V37)
 
-## *__V37 - IaC med templates__*
+## *__V38 - IaC med templates__*
 [/V38/README.md](https://github.com/03timnor/Azure_MOV25/tree/main/V38)
