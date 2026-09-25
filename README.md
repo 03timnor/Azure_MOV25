@@ -16,3 +16,6 @@
 
 ## *__V38 - IaC med templates__*
 [/V38/README.md](https://github.com/03timnor/Azure_MOV25/tree/main/V38)
+
+## *__V39 - Automation och integration__*
+[/V39/README.md](https://github.com/03timnor/Azure_MOV25/tree/main/V39)
