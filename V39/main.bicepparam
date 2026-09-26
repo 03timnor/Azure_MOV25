@@ -6,16 +6,16 @@ using 'main.bicep'
 // --------------------------------------------------------------------------
 
 // Your SSH public key, e.g. the contents of ~/.ssh/id_rsa.pub
-param sshPublicKey = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... your-key-here'
+param sshPublicKey = 'placeholder-for-your-ssh-public-key'
 
 // Object ID of the identity that should get Storage Blob Data Contributor
 // on the storage account, e.g.:
 //   az ad signed-in-user show --query id -o tsv
-param callerObjectId = '00000000-0000-0000-0000-000000000000'
+param callerObjectId = 'placeholder-for-your-azure-ad-object-id'
 
 // Your public IP address, allowed through the storage account firewall.
 // Find it with: curl -s https://ifconfig.me
-param allowedIpAddress = '203.0.113.10'
+param allowedIpAddress = 'placeholder-for-your-public-ip-address'
 
 // --------------------------------------------------------------------------
 // Optional — everything below already has a default in main.bicep.
@@ -45,4 +45,4 @@ param allowedIpAddress = '203.0.113.10'
 // param storageAccountNamePrefix = 'stnovatrix'
 // param storageAccountSku = 'Standard_LRS'
 // param containerName = 'arenden'
-// param flowUrl = 'https://prod-00.northeurope.logic.azure.com/workflows/...'
+param flowUrl = 'placeholder-for-your-flow-url'

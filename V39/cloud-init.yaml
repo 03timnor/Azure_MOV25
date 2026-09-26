@@ -23,7 +23,9 @@ write_files:
       # name (the same account the provisioning script created). BLOB_LAYOUT and
       # FLOW_URL are optional and control what happens with the ticket next.
 
+      import base64
       import json
+      import mimetypes
       import uuid
       import urllib.request
       from datetime import datetime, timezone
@@ -75,14 +77,14 @@ write_files:
           return ticket_name, image_name
 
 
-      def _notify_flow(ticket):
-          # If a flow URL is configured, POST the ticket JSON to it. Wrapped in
+      def _notify_flow(payload):
+          # If a flow URL is configured, POST the payload JSON to it. Wrapped in
           # try/except so a broken or missing flow never stops the ticket from
           # being saved. The form must always work even if the flow is down.
           if not FLOW_URL:
               return
           try:
-              data = json.dumps(ticket, ensure_ascii=False).encode("utf-8")
+              data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
               req = urllib.request.Request(
                   FLOW_URL,
                   data=data,
@@ -119,6 +121,15 @@ write_files:
           ticket_name, image_name = _blob_names(ticket_id, image_filename)
           ticket["image"] = image_name or ""
 
+          # Read the image into memory once (if present) so it can both be
+          # uploaded to blob storage AND embedded as base64 in the flow
+          # payload below. image.stream can only be consumed once, so we
+          # can't reuse it for both purposes.
+          image_bytes = image.read() if image_filename else None
+          image_content_type = None
+          if image_bytes is not None:
+              image_content_type = mimetypes.guess_type(image_filename)[0] or "application/octet-stream"
+
           # 1) Store the ticket itself as a JSON blob.
           container.upload_blob(
               name=ticket_name,
@@ -128,15 +139,30 @@ write_files:
           )
 
           # 2) Store the attached image next to it, if the user sent one.
+          #    content_type is set so the blob renders correctly if opened
+          #    directly (e.g. in a browser or Storage Explorer).
           if image_name is not None:
               container.upload_blob(
                   name=image_name,
-                  data=image.stream,
+                  data=image_bytes,
                   overwrite=True,
+                  content_settings=ContentSettings(content_type=image_content_type),
               )
 
-          # 3) Optionally notify a Power Automate HTTP flow. Never blocks the save.
-          _notify_flow(ticket)
+          # 3) Optionally notify a Power Automate HTTP flow. Never blocks the
+          #    save. The flow can't reach into the storage account itself
+          #    (it's locked down to the private endpoint + one allowlisted
+          #    IP), so the image is embedded directly as base64 instead of
+          #    sent as a link. Kept as a separate payload so the JSON stored
+          #    in blob storage stays small (just the filename reference).
+          flow_payload = dict(ticket)
+          if image_bytes is not None:
+              flow_payload["image_content_type"] = image_content_type
+              flow_payload["image_base64"] = base64.b64encode(image_bytes).decode("ascii")
+          else:
+              flow_payload["image_content_type"] = ""
+              flow_payload["image_base64"] = ""
+          _notify_flow(flow_payload)
 
           # A plain confirmation page. ASCII only, so the file survives cloud-init.
           body = (
