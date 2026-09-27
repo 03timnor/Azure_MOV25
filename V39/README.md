@@ -1178,3 +1178,44 @@ Flöde i JSON format (*new_ticket.json*):
 
 Kedjan med en bifogad bild fungerar:
 
+![alt text](novatrix_website_with_attachment.png)
+
+![alt text](ticket_with_attachment_sent.png)
+
+![alt text](container_with_attachment.png)
+
+![alt text](sharepoint_list_with_attachment.png)
+
+![alt text](sharepoint_attachment.png)
+
+![alt text](employee_email_notification_with_attachment.png)
+
+![alt text](employee_email_notification_attachment.png)
+
+![alt text](customer_email_notification_with_attachment.png)
+
+![alt text](customer_email_notification_attachment.png)
+
+![alt text](flow_with_attachment.png)
+
+Kedjan utan en bifogad bild fungerar:
+
+![alt text](novatrix_website_without_attachment.png)
+
+![alt text](ticket_without_attachment_sent.png)
+
+![alt text](container_without_attachment.png)
+
+![alt text](sharepoint_list_without_attachment.png)
+
+![alt text](employee_email_notification_without_attachment.png)
+
+![alt text](customer_email_notification_without_attachment.png)
+
+![alt text](flow_without_attachment.png)
+
+*__OBS!__* Efter att testerna utfördes upptäcktes att steg i flödet inte hade korrekt namn. Steget hette "*Send an email - customer*" men skulle hetat "*Send an email - customer with attachment*" Detta är nu justerat, och påverkar inte funktionaliteten. Se bild nedan:
+
+![alt text](new_ticket_flow.png)
+
+## *__4. Dokumentation__*
