@@ -873,6 +873,15 @@ runcmd:
   - systemctl restart nginx
 ```
 
+Script körs via följande i *__bash__* terminal:
+
+```bash
+az deployment sub create \
+  --location swedencentral \
+  --template-file main.bicep \
+  --parameters main.bicepparam \
+```
+
 ## *__2. Skapa flöde__*
 
 Flödet skapades via *__Power Automate__*.
@@ -1172,6 +1181,8 @@ Flöde i JSON format (*new_ticket.json*):
 }
 ```
 
+*__OBS!__* Flödet kunde inte sparas via lösningar, då databas behövdes. *__JSON__* datan exporterades via ZIP fil istället.
+
 ![alt text](new_ticket_flow.png)
 
 ## *__3. Verifiering__*
@@ -1219,3 +1230,33 @@ Kedjan utan en bifogad bild fungerar:
 ![alt text](new_ticket_flow.png)
 
 ## *__4. Dokumentation__*
+
+När ett ärende skickas in via webbsidan så skickar den virtuella maskinens backend ärendets data till flödets HTTP-trigger, vilket göt att flödet startas. 
+
+Därefter finns ett villkor: "__Datan i "*Image base64*" är inte tom__". Om detta är sant, allstå att ärendet innehåller bilddata så kommer flödet fortsätta i "*True*" grenen. Är det däremot inte bilddata i ärendet så kommer födet fortsätta i "*False*" grenen.
+
+Vilkoret i bildformat:
+
+![alt text](condition.png)
+
+Båda grenarna är lika förutom att "*True*" grenen innehåller bilagor i sina steg och det har ej "*False*" grenen. Båda grenarna bygger på dynamisk data. Både från den initiala HTTP-triggern och *__SharePoint__* listans ärende/objekt som skapas i "*Create item*" steget i båda grenarna.
+
+Exempel på dynamiskt innehåll ifrån både HTTP-triggern och *__SharePoint__* listan:
+
+![alt text](dynamic_content.png)
+
+Här hämtas mailadress och bilddata direkt ifrån HTTP-triggern och allt annat från ärendet i *__SharePoint__* listan. Förutom en sak, "*Ärendet registrerat*" hämtas via en formel i *__Power Automate__* för att tiden skall visas korrekt.
+
+Om man bara hade använt datan ifrån HTTP-triggern så hade man inte kunnat ha med steget för "*Ärendets nuvarande status*" då den datan skapas och endast finns i *__SharePoint__* ärendet/objektet.
+
+Flödets design ser ut som det gör då det fyller de behov som finns i dagsläget. Det skapar ett ärende med relevant innehåll. Det skickar ut notifikationer till personal (till en delad bravlåda, så de vet att nytt ärende har skapats) och till kund (en bekräftelse på att deras ärende har tagits emot). Flödet kan även anpassa sig även efter om det finns en bifogad bild eller inte.
+
+Flödets design och *__JSON__* kod finns i del 2.
+
+Flödet skulle kunna utvecklas framöver om behov uppstår. Blir ärendeformuläret utökat på webbsidan för kunderna måste man anpassa mailen och skapade av objekt/ärende i *__SharePoint__* listan med nytt dynamiskt innehåll och ändra *__JSON__* schemat för HTTP triggern så det fortfarande passar.
+
+Man kan även lägga till fler steg. Börjar företaget arbeta mer med *__Teams__* så skulle man kunna göra så att de anställda får en notifikation där med. 
+
+## *__Hur VG delen har uppfyllts denna vecka__*
+
+Flödet skickar ut notifikationer till anställda och kund (via *__Outlook__*) och sätter igång flera sammankopplade tjänster som hämtar data ifrån varandra (HTTP-trigger, *__SharePoint__* och *__Outlook__*). Designen har motiverats och förslag på utökningar har gjorts.
