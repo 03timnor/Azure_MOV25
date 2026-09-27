@@ -1,0 +1,290 @@
+{
+    "name": "4e8be4ce-96c0-4d8b-ba3e-81a98bef82c3",
+    "id": "/providers/Microsoft.Flow/flows/4e8be4ce-96c0-4d8b-ba3e-81a98bef82c3",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "new_ticket",
+        "definition": {
+            "metadata": {
+                "workflowEntityId": null,
+                "processAdvisorMetadata": null,
+                "flowChargedByPaygo": null,
+                "flowclientsuspensionreason": "None",
+                "flowclientsuspensiontime": null,
+                "flowclientsuspensionreasondetails": null,
+                "creator": {
+                    "id": "792176cc-4652-426c-8111-d8b5858fc81c",
+                    "type": "User",
+                    "tenantId": "70d725da-332c-4f51-adef-7b254380e7a9"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2026-09-27T14:30:37.9262748Z",
+                "lastModifiedBy": "792176cc-4652-426c-8111-d8b5858fc81c",
+                "connectionKeySavedTimeKey": "2026-09-27T14:30:37.9262748Z",
+                "creationSource": "Portal",
+                "modifiedSources": "Portal"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                },
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                }
+            },
+            "triggers": {
+                "manual": {
+                    "metadata": {},
+                    "type": "Request",
+                    "kind": "Http",
+                    "inputs": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "mail": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "created": {
+                                    "type": "string"
+                                },
+                                "image": {
+                                    "type": "string"
+                                },
+                                "image_content_type": {
+                                    "type": "string"
+                                },
+                                "image_base64": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "triggerAuthenticationType": "All"
+                    }
+                }
+            },
+            "actions": {
+                "Condition": {
+                    "actions": {
+                        "Create_item_-_ticket_list_with_attachment": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                                "parameters": {
+                                    "dataset": "https://realtim03gmail.sharepoint.com/sites/Ticket",
+                                    "table": "7cfab6f1-7119-4d6b-a76a-6430b5bf5757",
+                                    "item/Title": "@triggerBody()?['id']",
+                                    "item/Beskrivning": "@triggerBody()?['message']",
+                                    "item/Anm_x00e4_lare": "@triggerBody()?['name']",
+                                    "item/Kontakt_x0028_e_x002d_post_x0029": "@triggerBody()?['mail']",
+                                    "item/Status/Value": "Ohanterad"
+                                },
+                                "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                    "connectionName": "shared_sharepointonline",
+                                    "operationId": "PostItem"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        },
+                        "Send_an_email_-_employee_with_attachment": {
+                            "runAfter": {
+                                "Add_attachment": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                                "parameters": {
+                                    "emailMessage/To": "ticket@realtim03gmail.onmicrosoft.com",
+                                    "emailMessage/Subject": "Nytt ärende @{outputs('Create_item_-_ticket_list_with_attachment')?['body/Title']}",
+                                    "emailMessage/Body": "<p class=\"editor-paragraph\">Nytt ärende har registrerats i ärendehanteringssystemet.<br><br><i><b><strong class=\"editor-text-bold editor-text-italic\">ID:</strong></b></i><br>@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Title']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendets nuvarande status:</strong></b></i><br>@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Status/Value']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Beskrivning:</strong></b></i><br>@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Beskrivning']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Anmälare:</strong></b></i><br>@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Anm_x00e4_lare']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Kontakt (e-post):</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Kontakt_x0028_e_x002d_post_x0029']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendet </strong></b></i><i><b><strong class=\"editor-text-bold editor-text-italic\">registrerat:</strong></b></i><br>@{formatDateTime(convertFromUtc(concat(substring(triggerBody()?['created'],0,4),'-',substring(triggerBody()?['created'],4,2),'-',substring(triggerBody()?['created'],6,2),'T',substring(triggerBody()?['created'],9,2),':',substring(triggerBody()?['created'],11,2),':',substring(triggerBody()?['created'],13,2),'Z'), 'W. Europe Standard Time'), 'yyyy-MM-dd HH:mm:ss')}</p><br><p class=\"editor-paragraph\">Hantera ärendet så fort som möjligt.</p><p class=\"editor-paragraph\">Återkoppla till anmälare via e-postadressen som angavs i ärendet.</p>",
+                                    "emailMessage/Attachments": [
+                                        {
+                                            "Name": "@triggerBody()?['image']",
+                                            "ContentBytes": "@base64ToBinary(triggerBody()?['image_base64'])"
+                                        }
+                                    ],
+                                    "emailMessage/Importance": "Normal"
+                                },
+                                "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                    "connectionName": "shared_office365",
+                                    "operationId": "SendEmailV2"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        },
+                        "Send_an_email_-_customer_with_attachment": {
+                            "runAfter": {
+                                "Send_an_email_-_employee_with_attachment": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                                "parameters": {
+                                    "emailMessage/To": "@triggerBody()?['mail']",
+                                    "emailMessage/Subject": "Ärende registerat @{outputs('Create_item_-_ticket_list_with_attachment')?['body/Title']}",
+                                    "emailMessage/Body": "<p class=\"editor-paragraph\">Ditt ärende har nu registrerats i vårt ärendehanteringssystem.</p><br><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">ID:</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Title']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendets nuvarande status:</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Status/Value']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Beskrivning:</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Beskrivning']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Anmälare:</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Anm_x00e4_lare']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Kontakt (e-post):</strong></b></i></p><p class=\"editor-paragraph\">@{outputs('Create_item_-_ticket_list_with_attachment')?['body/Kontakt_x0028_e_x002d_post_x0029']}</p><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendet registrerat:</strong></b></i><br>@{formatDateTime(convertFromUtc(concat(substring(triggerBody()?['created'],0,4),'-',substring(triggerBody()?['created'],4,2),'-',substring(triggerBody()?['created'],6,2),'T',substring(triggerBody()?['created'],9,2),':',substring(triggerBody()?['created'],11,2),':',substring(triggerBody()?['created'],13,2),'Z'), 'W. Europe Standard Time'), 'yyyy-MM-dd HH:mm:ss')}</p><br><p class=\"editor-paragraph\">Vi återkommer till den e-postadress som du angav som kontakt när ditt ärende är löst eller om vi behöver mer info.</p><br><p class=\"editor-paragraph\"><i><b><strong class=\"editor-text-bold editor-text-italic\">Med vänliga hälsningar</strong></b></i></p><p class=\"editor-paragraph\"><i><em class=\"editor-text-italic\">Novatrix</em></i></p><br>",
+                                    "emailMessage/Attachments": [
+                                        {
+                                            "Name": "@triggerBody()?['image']",
+                                            "ContentBytes": "@base64ToBinary(triggerBody()?['image_base64'])"
+                                        }
+                                    ],
+                                    "emailMessage/Importance": "Normal"
+                                },
+                                "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                    "connectionName": "shared_office365",
+                                    "operationId": "SendEmailV2"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        },
+                        "Add_attachment": {
+                            "runAfter": {
+                                "Create_item_-_ticket_list_with_attachment": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                                "parameters": {
+                                    "dataset": "https://realtim03gmail.sharepoint.com/sites/Ticket",
+                                    "table": "7cfab6f1-7119-4d6b-a76a-6430b5bf5757",
+                                    "itemId": "@outputs('Create_item_-_ticket_list_with_attachment')?['body/ID']",
+                                    "displayName": "@triggerBody()?['image']",
+                                    "body": "@base64ToBinary(triggerBody()?['image_base64'])"
+                                },
+                                "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                    "connectionName": "shared_sharepointonline",
+                                    "operationId": "CreateAttachment"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        }
+                    },
+                    "runAfter": {},
+                    "else": {
+                        "actions": {
+                            "Create_item_-_without_attachment": {
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                    "parameters": {
+                                        "dataset": "https://realtim03gmail.sharepoint.com/sites/Ticket",
+                                        "table": "7cfab6f1-7119-4d6b-a76a-6430b5bf5757",
+                                        "item/Title": "@triggerBody()?['id']",
+                                        "item/Beskrivning": "@triggerBody()?['message']",
+                                        "item/Anm_x00e4_lare": "@triggerBody()?['name']",
+                                        "item/Kontakt_x0028_e_x002d_post_x0029": "@triggerBody()?['mail']",
+                                        "item/Status/Value": "Ohanterad"
+                                    },
+                                    "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                        "connectionName": "shared_sharepointonline",
+                                        "operationId": "PostItem"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                }
+                            },
+                            "Send_an_email_-_employee_without_attachment": {
+                                "runAfter": {
+                                    "Create_item_-_without_attachment": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                    "parameters": {
+                                        "emailMessage/To": "ticket@realtim03gmail.onmicrosoft.com",
+                                        "emailMessage/Subject": "Nytt ärende @{outputs('Create_item_-_without_attachment')?['body/Title']}",
+                                        "emailMessage/Body": "<p class=\"editor-paragraph\">Nytt ärende har registrerats i ärendehanteringssystemet.<br><br><i><b><strong class=\"editor-text-bold editor-text-italic\">ID:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Title']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendets nuvarande status:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Status/Value']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Beskrivning:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Beskrivning']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Anmälare:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Anm_x00e4_lare']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Kontakt (e-post):</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Kontakt_x0028_e_x002d_post_x0029']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendet registrerat:</strong></b></i><br>@{formatDateTime(convertFromUtc(concat(substring(triggerBody()?['created'],0,4),'-',substring(triggerBody()?['created'],4,2),'-',substring(triggerBody()?['created'],6,2),'T',substring(triggerBody()?['created'],9,2),':',substring(triggerBody()?['created'],11,2),':',substring(triggerBody()?['created'],13,2),'Z'), 'W. Europe Standard Time'), 'yyyy-MM-dd HH:mm:ss')}<br><br>Hantera ärendet så fort som möjligt.<br>Återkoppla till anmälare via e-postadressen som angavs i ärendet.</p>",
+                                        "emailMessage/Importance": "Normal"
+                                    },
+                                    "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                        "connectionName": "shared_office365",
+                                        "operationId": "SendEmailV2"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                }
+                            },
+                            "Send_an_email_-_customer_without_attachment": {
+                                "runAfter": {
+                                    "Send_an_email_-_employee_without_attachment": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                    "parameters": {
+                                        "emailMessage/To": "@triggerBody()?['mail']",
+                                        "emailMessage/Subject": "Ärende registerat @{outputs('Create_item_-_without_attachment')?['body/Title']}",
+                                        "emailMessage/Body": "<p class=\"editor-paragraph\">Ditt ärende har nu registrerats i vårt ärendehanteringssystem.<br><br><i><b><strong class=\"editor-text-bold editor-text-italic\">ID:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Title']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendets nuvarande status:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Status/Value']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Beskrivning:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Beskrivning']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Anmälare:</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Anm_x00e4_lare']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Kontakt (e-post):</strong></b></i><br>@{outputs('Create_item_-_without_attachment')?['body/Kontakt_x0028_e_x002d_post_x0029']}<br><i><b><strong class=\"editor-text-bold editor-text-italic\">Ärendet registrerat:</strong></b></i></p><p class=\"editor-paragraph\">@{formatDateTime(convertFromUtc(concat(substring(triggerBody()?['created'],0,4),'-',substring(triggerBody()?['created'],4,2),'-',substring(triggerBody()?['created'],6,2),'T',substring(triggerBody()?['created'],9,2),':',substring(triggerBody()?['created'],11,2),':',substring(triggerBody()?['created'],13,2),'Z'), 'W. Europe Standard Time'), 'yyyy-MM-dd HH:mm:ss')}</p><p class=\"editor-paragraph\"><br>Vi återkommer till den e-postadress som du angav som kontakt när ditt ärende är löst eller om vi behöver mer info.<br><br>Med vänliga hälsningar<br>Novatrix</p>",
+                                        "emailMessage/Importance": "Normal"
+                                    },
+                                    "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                        "connectionName": "shared_office365",
+                                        "operationId": "SendEmailV2"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                }
+                            }
+                        }
+                    },
+                    "expression": {
+                        "and": [
+                            {
+                                "not": {
+                                    "equals": [
+                                        "@triggerBody()?['image_base64']",
+                                        ""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "type": "If"
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-edc31114-848d-42c5-875e-d44bd34c7103",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified",
+                "apiName": "sharepointonline",
+                "isProcessSimpleApiReferenceConversionAlreadyDone": false
+            },
+            "shared_office365": {
+                "connectionName": "shared-office365-e6fba794-39c8-4e0d-bf7f-63475ebf813d",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                "tier": "NotSpecified",
+                "apiName": "office365",
+                "isProcessSimpleApiReferenceConversionAlreadyDone": false
+            }
+        },
+        "flowFailureAlertSubscribed": false,
+        "isManaged": false
+    }
+}
