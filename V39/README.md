@@ -8,7 +8,7 @@ Veckans uppgift går ut på att bygga ett automatiserat arbetsflöde. När ett �
 
 ## *__1. Skapa upp miljön__*
 
-Miljön skapas upp på samma sätt som i *__V38__* uppgiften dock är koden justerad något för att *__Power Automate__* triggern skall fungera ordentligt.
+Miljön skapas upp på samma sätt som i *__V38__* uppgiften. Dock är koden justerad något för att *__Power Automate__* triggern skall fungera ordentligt.
 
 *main.bicep:*
 
@@ -873,7 +873,9 @@ runcmd:
   - systemctl restart nginx
 ```
 
-Script körs via följande i *__bash__* terminal:
+Man måste erätta alla "*placeholder*" med sin egen data för attb scripten skall fungera korrekt.
+
+Script körs via följande kommando i *__bash__* terminal:
 
 ```bash
 az deployment sub create \
@@ -886,7 +888,7 @@ az deployment sub create \
 
 Flödet skapades via *__Power Automate__*.
 
-Flöde i JSON format (*new_ticket.json*):
+Flöde i *__JSON__* format (*new_ticket.json*):
 
 ```json
 {
@@ -1245,11 +1247,11 @@ Exempel på dynamiskt innehåll ifrån både HTTP-triggern och *__SharePoint__* 
 
 ![alt text](dynamic_content.png)
 
-Här hämtas mailadress och bilddata direkt ifrån HTTP-triggern och allt annat från ärendet i *__SharePoint__* listan. Förutom en sak, "*Ärendet registrerat*" hämtas via en formel i *__Power Automate__* för att tiden skall visas korrekt.
+Här hämtas mailadress och bilddata direkt ifrån HTTP-triggern och allt annat från ärendet i *__SharePoint__* listan. Förutom en sak: "*Ärendet registrerat*" hämtas via en formel i *__Power Automate__* för att tiden skall visas korrekt.
 
 Om man bara hade använt datan ifrån HTTP-triggern så hade man inte kunnat ha med steget för "*Ärendets nuvarande status*" då den datan skapas och endast finns i *__SharePoint__* ärendet/objektet.
 
-Flödets design ser ut som det gör då det fyller de behov som finns i dagsläget. Det skapar ett ärende med relevant innehåll. Det skickar ut notifikationer till personal (till en delad bravlåda, så de vet att nytt ärende har skapats) och till kund (en bekräftelse på att deras ärende har tagits emot). Flödet kan även anpassa sig även efter om det finns en bifogad bild eller inte.
+Flödets design ser ut som det gör då det fyller de behov som finns i dagsläget. Det skapar ett ärende med relevant innehåll. Det skickar ut notifikationer till personal (till en delad bravlåda, så de vet att nytt ärende har skapats) och till kund (en bekräftelse på att deras ärende har tagits emot). Flödet kan även anpassa sig efter om det finns en bifogad bild eller inte.
 
 Flödets design och *__JSON__* kod finns i del 2.
 
