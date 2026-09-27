@@ -1227,7 +1227,7 @@ Kedjan utan en bifogad bild fungerar:
 
 ![alt text](flow_without_attachment.png)
 
-*__OBS!__* Efter att testerna utfördes upptäcktes att steg i flödet inte hade korrekt namn. Steget hette "*Send an email - customer*" men skulle hetat "*Send an email - customer with attachment*" Detta är nu justerat, och påverkar inte funktionaliteten. Se bild nedan:
+*__OBS!__* Efter att testerna utfördes upptäcktes att ett steg i flödet inte hade korrekt namn. Steget hette "*Send an email - customer*" men skulle hetat "*Send an email - customer with attachment*" Detta är nu justerat, och påverkar inte funktionaliteten. Se bild nedan:
 
 ![alt text](new_ticket_flow.png)
 
