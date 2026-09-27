@@ -1241,7 +1241,7 @@ Vilkoret i bildformat:
 
 ![alt text](condition.png)
 
-Båda grenarna är lika förutom att "*True*" grenen innehåller bilagor i sina steg och det har ej "*False*" grenen. Båda grenarna bygger på dynamisk data. Både från den initiala HTTP-triggern och *__SharePoint__* listans ärende/objekt som skapas i "*Create item*" steget i båda grenarna.
+Båda grenarna är lika förutom att "*True*" grenen innehåller bilagor i sina steg och det har ej "*False*" grenen. Båda grenarna bygger på dynamisk data. Både från den initiala HTTP-triggern och *__SharePoint__* listans ärende/objekt som skapas i "*Create item*" steget i båda grenarna. Båda grenarna skapar ett ärende i *__SharePoint__* listan och skickar mail till kund och anställd.
 
 Exempel på dynamiskt innehåll ifrån både HTTP-triggern och *__SharePoint__* listan:
 
