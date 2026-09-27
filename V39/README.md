@@ -1233,7 +1233,7 @@ Kedjan utan en bifogad bild fungerar:
 
 ## *__4. Dokumentation__*
 
-När ett ärende skickas in via webbsidan så skickar den virtuella maskinens backend ärendets data till flödets HTTP-trigger, vilket göt att flödet startas. 
+När ett ärende skickas in via webbsidan så skickar den virtuella maskinens backend ärendets data till flödets HTTP-trigger, vilket gör att flödet startas. 
 
 Därefter finns ett villkor: "__Datan i "*Image base64*" är inte tom__". Om detta är sant, allstå att ärendet innehåller bilddata så kommer flödet fortsätta i "*True*" grenen. Är det däremot inte bilddata i ärendet så kommer födet fortsätta i "*False*" grenen.
 
@@ -1253,7 +1253,7 @@ Om man bara hade använt datan ifrån HTTP-triggern så hade man inte kunnat ha 
 
 Flödets design ser ut som det gör då det fyller de behov som finns i dagsläget. Det skapar ett ärende med relevant innehåll. Det skickar ut notifikationer till personal (till en delad bravlåda, så de vet att nytt ärende har skapats) och till kund (en bekräftelse på att deras ärende har tagits emot). Flödet kan även anpassa sig efter om det finns en bifogad bild eller inte.
 
-Flödets design och *__JSON__* kod finns i del 2.
+Flödets design/steg och *__JSON__* kod finns i del 2.
 
 Flödet skulle kunna utvecklas framöver om behov uppstår. Blir ärendeformuläret utökat på webbsidan för kunderna måste man anpassa mailen och skapade av objekt/ärende i *__SharePoint__* listan med nytt dynamiskt innehåll och ändra *__JSON__* schemat för HTTP triggern så det fortfarande passar.
 
