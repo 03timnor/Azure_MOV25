@@ -16,7 +16,7 @@ Veckans uppgift går ut på att det finns fler sätt att köra en applikation ä
 | __Man ansvarar för__ | Operativsystems-patchar, säkerhet och konfiguration | Image och dess innehåll, plattformen sköter servrarna | Endast koden och dess inställningar |
 | __Drift__ | Mest | Medel | Minst |
 | __Kontroll__ | Mest | Medel | Minst |
-| __Skalning__ | Manuell skalning eller via regler (exempelvis Scale Sets) | Automatisk skalning på en plattform som skalat (exempelvis AKS, Container Apps) | Direkt inbyggd automatisk skalning |
+| __Skalning__ | Manuell skalning eller via regler (exempelvis Scale Sets) | Automatisk skalning på en plattform som skalar (exempelvis AKS, Container Apps) | Direkt inbyggd automatisk skalning |
 | __Kostnadsmodell__ | Kostnad per timme/sekund så länge den är i drift | Kostnad per sekund för CPU/RAM (Container Apps) eller för noderna (AKS) | Kostnad per körning |
 | __Exempel i Azure__ | Virtual Machines | AKS, ACI och Container Apps | Azure Functions |
 

@@ -6,14 +6,14 @@ using 'V40_main.bicep'
 
 // Object ID of the identity that should get Storage Blob Data Contributor:
 //   az ad signed-in-user show --query id -o tsv
-param callerObjectId = 'placeholder-for-your-azure-ad-object-id'
+param callerObjectId = 'placeholder'
 
 // Your public IP, allowed through the storage firewall (curl -s https://ifconfig.me).
 // Use '' to skip.
-param allowedIpAddress = 'placeholder-for-your-public-ip-address'
+param allowedIpAddress = 'placeholder'
 
 // Power Automate HTTP trigger URL. Use '' to disable the flow call.
-param flowUrl = 'placeholder-for-your-flow-url'
+param flowUrl = 'placeholder'
 
 // --------------------------------------------------------------------------
 // Controlled by V40_deploy.sh through environment variables - do not edit.
