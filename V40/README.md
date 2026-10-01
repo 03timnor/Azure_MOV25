@@ -38,7 +38,7 @@ Hemsidan kan skicka ärenden till storage:
 
 ![alt text](container_contents_2.png)
 
-Flödet från V39 fungerar fortfarande (exempel på ett steg, mail till kund):
+Flödet från *V39* fungerar fortfarande (exempel på ett steg, mail till kund):
 
 ![alt text](flow.png)
 
@@ -796,7 +796,7 @@ EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60", "V40_app:app"]
 ```
 
-För att starta allt så kör man följande kommando i en *__bash__* terminal (mappstruktur med alla script måste vara likadan som i mitt GitHub Repository):
+För att starta allt så kör man följande kommando i en *__bash__* terminal (mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40*):
 
 ```bash
 chmod +x V40_deploy.sh
@@ -805,3 +805,46 @@ chmod +x V40_deploy.sh
 
 ## *__5. Motivering (VG)__*
 
+## Varför *Container* och inte *VM*?
+
+### *Minskad drift / underhåll*
+
+Med en *VM* behöver operativsystemet patchas / uppdateras manuellt. Med en *Container* byter man image när något ändras, plattformen sköter servrarna. Detta sparar arbetskraft och pengar.
+
+### *Konfiguration*
+
+*cloud-init*  ersätts av en *Dockerfile* på cirka 22 rader. Det blir då lättare att versionshantera, återskapa och läsa. Bidrar till sparad tid, arbetskraft och pengar.
+
+### *Tillgänglighet*
+
+En *VM* är en enda punkt och den kan gå ner. En *Container Apps* kan dock starta om appen och köra replikor. Bidrar till en mer robust och stabil mijö.
+
+### *Bastion*
+
+*Bastion* användes i den förra lösningen med *VM* för inloggning till *VM* på grund av att säkra miljön. *Bastion* behövs inte längre då det inte finns någon *VM* att logga in på. *Bastion* har en hög kostnad. Att använda "*Container*" lösningen tar bort denna kostnad och säkerheten påverkas ej negativt.
+
+### *Kostnadsprincip*
+
+En *VM* betalar man för varje timme den är i drift, även om den inte används. En *Container* betalar man för per använd sekund för *CPU* och *RAM* (till exempel *ACI* eller *Container Apps* med Consumption-profil) eller för antal noder (till exempel *AKS*). Lösningen för *V40* använder *Container Apps* med Consumption-profil. Denna lösning blir därför billigare.
+
+### *Användningsområde*
+
+Ingen tung resurskrävande applikation används. Den kräver heller inte att man har full kontroll på plattformen den körs på. Då passar *Container* bättre än *VM*. En *VM* blir lite "*overkill*" i detta fallet. Genom att använda *Container* som passar detta användingsområde bättre så sparar man dessutom exempelvis tid, arbetskraft och pengar.
+
+## Varför *Container* och inte *Serverless (Functions)*?
+
+### *Kod*
+
+Att skriva om den befintliga miljön från de tidigare uppgifterna är *VM* användes till en *Container* lösning var enklare än att skriva om den till en *Serverless (Function)* lösning. Som *Serverless (Functions)* hade man behövt skriva om i princip allting till *Functions* programmeringsmodell eller lägga *Flask* ovanpå *Functions* med hjälp av *WsgiFunctionApp*. Att använda *Container* sparar därför tid, arbetskraft och därav även pengar.
+
+### *Möjligheter att flytta*
+
+En *Container* image kan flyttas mellan till exempel *Container Apps*, *AKS* eller *ACI*. Om man istället använder *Functions* kod så är den bara användas i *Functions*. *Container* lösningen har därför en fördel här om man väljer att byta plattform eller om man vill köra appen på flera ställen.
+
+### *Användningsområde*
+
+*Functions* är skapat främst för kod som körs när något händer, exempelvis en *HTTP* request eller att en ny blob har skapats. Appen som används i denna miljö är mer än så. Appen består bland annat ett formulär, backend och endpoint. En *Container* lösning kan hantera allt detta på samma gång. Därav passar det bättre.
+
+## En gemensam anledning
+
+*Container* är en mittpunkt mellan *VM* och *Serverless (Functions)*
