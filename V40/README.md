@@ -22,6 +22,30 @@ Veckans uppgift går ut på att det finns fler sätt att köra en applikation ä
 
 ## *__3. Verifiering__*
 
+Resursgrupp med innehåll skapas:
+
+![alt text](resource_group.png)
+
+![alt text](resource_group_contents.png)
+
+Hemsidan kan nås:
+
+![alt text](novatrix_website.png)
+
+Hemsidan kan skicka ärenden till storage:
+
+![alt text](ticket_sent.png)
+
+![alt text](container_contents_1.png)
+
+![alt text](container_contents_2.png)
+
+Flödet från V39 fungerar fortfarande (exempel på ett steg, mail till kund):
+
+![alt text](flow.png)
+
+![alt text](flow_example.png)
+
 ## *__4. Dokumentation__*
 
 ## *__5. Motivering (VG)__*
