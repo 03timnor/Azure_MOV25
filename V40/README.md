@@ -796,12 +796,13 @@ EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60", "V40_app:app"]
 ```
 
-För att starta allt så kör man följande kommando i en *__bash__* terminal (mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40*):
+För att starta allt så kör man följande kommando i en *__bash__* terminal:
 
 ```bash
 chmod +x V40_deploy.sh
 ./V40_deploy.sh
 ```
+*__OBS!__* . Mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40* (förutom bilder och README)
 
 *__OBS__* Man kan få följande meddelande är man kör koden:
 
