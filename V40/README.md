@@ -803,7 +803,17 @@ chmod +x V40_deploy.sh
 ./V40_deploy.sh
 ```
 
-## *__5. Motivering (VG)__*
+*__OBS__* Man kan få följande meddelande är man kör koden:
+
+```
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+```
+Detta är ingeting som påverkar funktionaliteten, detta är verifierat genom tester och kontroller.
+
+## *__3. Motivering (VG)__*
 
 ## Varför *Container* och inte *VM*?
 
@@ -817,34 +827,42 @@ Med en *VM* behöver operativsystemet patchas / uppdateras manuellt. Med en *Con
 
 ### *Tillgänglighet*
 
-En *VM* är en enda punkt och den kan gå ner. En *Container Apps* kan dock starta om appen och köra replikor. Bidrar till en mer robust och stabil mijö.
+En *VM* är en enda punkt och den kan gå ner. En *Container Apps* kan dock starta om appen och köra repliker. Bidrar till en mer robust och stabil miljö.
 
 ### *Bastion*
 
-*Bastion* användes i den förra lösningen med *VM* för inloggning till *VM* på grund av att säkra miljön. *Bastion* behövs inte längre då det inte finns någon *VM* att logga in på. *Bastion* har en hög kostnad. Att använda "*Container*" lösningen tar bort denna kostnad och säkerheten påverkas ej negativt.
+*Bastion* användes i den förra lösningen med *VM* för inloggning till *VM* på grund av att säkra miljön. *Bastion* behövs inte längre då det inte finns någon *VM* att logga in på. *Bastion* har en hög kostnad. Att använda *Container* lösningen tar bort denna kostnad och säkerheten påverkas ej negativt.
 
 ### *Kostnadsprincip*
 
-En *VM* betalar man för varje timme den är i drift, även om den inte används. En *Container* betalar man för per använd sekund för *CPU* och *RAM* (till exempel *ACI* eller *Container Apps* med Consumption-profil) eller för antal noder (till exempel *AKS*). Lösningen för *V40* använder *Container Apps* med Consumption-profil. Denna lösning blir därför billigare.
+En *VM* betalar man för varje timme den är i drift, även om den inte används. En *Container* betalar man för per använd sekund för *CPU* och *RAM* (till exempel *ACI* eller *Container Apps* med Consumption-profil) eller för antal noder (till exempel *AKS*). Lösningen för *V40* använder *Container Apps* med Consumption-profil. Denna lösning blir även billigare, främst för att *Bastion* försvinner.
 
 ### *Användningsområde*
 
-Ingen tung resurskrävande applikation används. Den kräver heller inte att man har full kontroll på plattformen den körs på. Då passar *Container* bättre än *VM*. En *VM* blir lite "*overkill*" i detta fallet. Genom att använda *Container* som passar detta användingsområde bättre så sparar man dessutom exempelvis tid, arbetskraft och pengar.
+Ingen tung resurskrävande applikation används. Den kräver heller inte att man har full kontroll på plattformen den körs på. Då passar *Container* bättre än *VM*. En *VM* blir lite "*overkill*" i detta fallet. Genom att använda *Container* som passar detta användningsområde bättre så sparar man dessutom exempelvis tid, arbetskraft och pengar.
 
 ## Varför *Container* och inte *Serverless (Functions)*?
 
 ### *Kod*
 
-Att skriva om den befintliga miljön från de tidigare uppgifterna är *VM* användes till en *Container* lösning var enklare än att skriva om den till en *Serverless (Function)* lösning. Som *Serverless (Functions)* hade man behövt skriva om i princip allting till *Functions* programmeringsmodell eller lägga *Flask* ovanpå *Functions* med hjälp av *WsgiFunctionApp*. Att använda *Container* sparar därför tid, arbetskraft och därav även pengar.
+Att skriva om den befintliga miljön från de tidigare uppgifterna när *VM* användes till en *Container* lösning var enklare än att skriva om den till en *Serverless (Function)* lösning. Som *Serverless (Functions)* hade man behövt skriva om stora delar av koden till *Functions* programmeringsmodell eller lägga *Flask* ovanpå *Functions* med hjälp av *WsgiFunctionApp*. Att använda *Container* sparar därför tid, arbetskraft och därav även pengar.
 
 ### *Möjligheter att flytta*
 
-En *Container* image kan flyttas mellan till exempel *Container Apps*, *AKS* eller *ACI*. Om man istället använder *Functions* kod så är den bara användas i *Functions*. *Container* lösningen har därför en fördel här om man väljer att byta plattform eller om man vill köra appen på flera ställen.
+En *Container* image kan flyttas mellan till exempel *Container Apps*, *AKS* eller *ACI*. Om man istället använder *Functions* så är den koden huvudsakligen bunden till *Functions*-värden. *Container* lösningen har därför en fördel här om man väljer att byta plattform eller om man vill köra appen på flera ställen.
+
+### *Felsökningsmöjligheter*
+
+Med kommandon som `az containerapp exec` så kan man felsöka inuti en *Container* genom att öppna en *Shell* i miljön. Man kan se till exempel DNS-svar mot endpoint, vilket kan vara en vanlig felkälla. *Serverless* har inte en lika direkt motsvarighet.
 
 ### *Användningsområde*
 
-*Functions* är skapat främst för kod som körs när något händer, exempelvis en *HTTP* request eller att en ny blob har skapats. Appen som används i denna miljö är mer än så. Appen består bland annat ett formulär, backend och endpoint. En *Container* lösning kan hantera allt detta på samma gång. Därav passar det bättre.
+*Functions* är skapat främst för kod som körs när något händer, exempelvis en *HTTP*-request eller att en ny blob har skapats. Appen som används i denna miljö är mer än så. Appen består bland annat av ett formulär, backend och endpoint. En *Container* lösning kan hantera allt detta på samma gång. Därav passar det bättre.
 
-## En gemensam anledning
+## *En gemensam anledning*
 
-*Container* är en mittpunkt mellan *VM* och *Serverless (Functions)*
+*Container* är en mittpunkt mellan *VM* och *Serverless (Functions)*. En mittpunkt i bland annat kontroll och drift. Det är därför den bästa utgångspunkten att börja ifrån för att sedan utvärdera miljöns behov.
+
+Man kan alltid planera för och försöka göra en hypotes vad man tror en mlijö kommer kräva eller kosta. Men man vet det aldrig säkert förrän man driftsatt miljön i praktiken. 
+
+*Container* har därför en fördel då det är en mittpunkt mellan de två andra alternativen. Det gör det enklare börja utvärdera och en logisk startpunkt.
