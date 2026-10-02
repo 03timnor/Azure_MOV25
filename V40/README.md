@@ -828,7 +828,7 @@ Med en *VM* behöver operativsystemet patchas / uppdateras manuellt. Med en *Con
 
 ### *Tillgänglighet*
 
-En *VM* är en enda punkt och den kan gå ner. En *Container Apps* kan dock starta om appen och köra repliker. Bidrar till en mer robust och stabil miljö.
+Förra lösningen hade en enda *VM* vilket innebar om den gick ner så gick allt ner. En *VM* kan göras mer tillgänglig med *Scale Sets*, lastbalanserare eller *Availability Zones* men det kräver mer konfiguration. *Container Apps* startar automatiskt om appen och har möjlighet att skala ut till fler repliker med mycket mindre arbete / konfiguration. Detta i sin tur leder till en mer robust och driftsäker miljö.
 
 ### *Bastion*
 
