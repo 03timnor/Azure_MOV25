@@ -866,3 +866,4 @@ Med kommandon som `az containerapp exec` så kan man felsöka inuti en *Containe
 Man kan alltid planera för och försöka göra en hypotes vad man tror en mlijö kommer kräva eller kosta. Men man vet det aldrig säkert förrän man driftsatt miljön i praktiken. 
 
 *Container* har därför en fördel då det är en mittpunkt mellan de två andra alternativen. Det gör det enklare börja utvärdera och en logisk startpunkt.
+
