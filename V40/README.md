@@ -802,7 +802,7 @@ För att starta allt så kör man följande kommando i en *__bash__* terminal:
 chmod +x V40_deploy.sh
 ./V40_deploy.sh
 ```
-*__OBS!__* . Mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40* (förutom bilder och README)
+*__OBS!__* Mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40* (förutom bilder och README)
 
 *__OBS__* Man kan få följande meddelande är man kör koden:
 
@@ -867,4 +867,3 @@ Med kommandon som `az containerapp exec` så kan man felsöka inuti en *Containe
 Man kan alltid planera för och försöka göra en hypotes vad man tror en mlijö kommer kräva eller kosta. Men man vet det aldrig säkert förrän man driftsatt miljön i praktiken. 
 
 *Container* har därför en fördel då det är en mittpunkt mellan de två andra alternativen. Det gör det enklare börja utvärdera och en logisk startpunkt.
-
