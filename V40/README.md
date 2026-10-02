@@ -802,9 +802,9 @@ För att starta allt så kör man följande kommando i en *__bash__* terminal:
 chmod +x V40_deploy.sh
 ./V40_deploy.sh
 ```
-*__OBS!__* Mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40* (förutom bilder och README)
+*__OBS!__* Mappstruktur med alla script måste vara likadan som i mitt GitHub Repository för *V40* (förutom bilder och README).
 
-*__OBS__* Man kan få följande meddelande är man kör koden:
+*__OBS!__* Man kan få följande meddelande är man kör koden:
 
 ```
 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
