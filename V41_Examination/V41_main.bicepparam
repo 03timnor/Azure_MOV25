@@ -30,13 +30,10 @@ param forvaltareGroupId = ''
 param ekonomiGroupId = ''
 
 // Sign-in against your own Entra ID tenant (same accounts and UPNs for tenants and staff).
-// V41_setup_auth.sh creates the app registration and prints these two values:
+// No client secret: the app registration trusts the portal's managed identity.
+// V41_setup_auth.sh creates the registration and prints the value to export:
 //   export OIDC_CLIENT_ID='...'
-//   export OIDC_CLIENT_SECRET='...'
-// oidcWellKnownUrl stays '' = your own tenant. Set it only for another provider.
 param oidcClientId = readEnvironmentVariable('OIDC_CLIENT_ID', '')
-param oidcWellKnownUrl = ''
-param oidcClientSecret = readEnvironmentVariable('OIDC_CLIENT_SECRET', '')
 
 // Extra recipients for urgent reports, e.g. 'jour@nordvik.example'
 param akutMailExtra = ''

@@ -13,6 +13,7 @@
 # Role, property and unit come from the Anvandare table (RowKey = lower-case UPN).
 # Without that header every API call is rejected.
 
+import base64
 import functools
 import json
 import logging
@@ -80,8 +81,20 @@ def _principal_id():
     if c.AUTH_MODE == "demo":
         key = request.cookies.get("demo_user", "hyresgast")
         return key if key in c.DEMO_USERS else None
-    # Easy Auth sets this to the signed-in user's UPN (claim preferred_username).
-    # The Anvandare table is keyed by the lower-case UPN.
+    # Easy Auth passes the signed-in user's claims base64-encoded. The Anvandare table
+    # is keyed by the lower-case UPN (claim preferred_username); the name header is
+    # the fallback.
+    raw = request.headers.get("X-MS-CLIENT-PRINCIPAL", "")
+    if raw:
+        try:
+            claims = json.loads(base64.b64decode(raw + "=" * (-len(raw) % 4))).get("claims", [])
+            for want in ("preferred_username",
+                         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn"):
+                for cl in claims:
+                    if cl.get("typ") == want and cl.get("val"):
+                        return cl["val"].strip().lower()
+        except (ValueError, TypeError):
+            pass
     return request.headers.get("X-MS-CLIENT-PRINCIPAL-NAME", "").strip().lower() or None
 
 

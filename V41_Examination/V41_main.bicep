@@ -81,15 +81,8 @@ param flowUrl string = ''
 @description('Demo sign-in with fake users instead of real authentication. Ignored (forced off) when environmentType is prod.')
 param demoMode bool = false
 
-@description('Client ID of the app registration used to sign users in. Created by V41_setup_auth.sh. Leave empty until it exists (the portal is then locked, not open).')
+@description('Client ID of the Entra app registration. Created by V41_setup_auth.sh. Leave empty until it exists (the portal is then locked, not open). There is no client secret: the app registration trusts the managed identity.')
 param oidcClientId string = ''
-
-@description('Well-known OpenID configuration URL. Leave empty to sign in against your own Entra ID tenant (the tenant of the subscription). Set it only for another provider, e.g. Entra External ID.')
-param oidcWellKnownUrl string = ''
-
-@description('Client secret of the app registration (stored as a Container App secret)')
-@secure()
-param oidcClientSecret string = ''
 
 @description('Extra recipients (comma separated) for urgent reports, besides the property manager')
 param akutMailExtra string = ''
@@ -115,8 +108,6 @@ param budgetContactEmails array = []
 
 @description('First day of a month. If a redeploy later complains about the budget start date, pin this to a fixed value.')
 param budgetStartDate string = utcNow('yyyy-MM-01')
-
-var oidcWellKnown = empty(oidcWellKnownUrl) ? '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0/.well-known/openid-configuration' : oidcWellKnownUrl
 
 var tags = {
   foretag: 'Nordvik'
@@ -164,8 +155,6 @@ module nordvik 'V41_resources.bicep' = {
     flowUrl: flowUrl
     demoMode: demoMode && environmentType != 'prod'
     oidcClientId: oidcClientId
-    oidcWellKnownUrl: oidcWellKnown
-    oidcClientSecret: oidcClientSecret
     akutMailExtra: akutMailExtra
     budgetAmount: budgetAmount
     budgetContactEmails: budgetContactEmails

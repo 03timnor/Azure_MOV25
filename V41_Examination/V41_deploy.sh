@@ -17,8 +17,8 @@
 #   LOCATION          Azure region for the deployment record (default swedencentral)
 #   IMAGE_NAME        Image and tag, e.g. portal:v7. Default: portal:<timestamp>
 #   FLOW_URL          Power Automate trigger URL (kept out of files on purpose)
-#   OIDC_CLIENT_ID / OIDC_CLIENT_SECRET   Reuse an existing app registration
-#                     (otherwise V41_setup_auth.sh creates one in stage "auth")
+#   OIDC_CLIENT_ID    Reuse an existing app registration (otherwise
+#                     V41_setup_auth.sh creates one in stage "auth"; no secret is used)
 #   SEED_USERS        true = load V41_users.csv / V41_properties.csv after "app"
 #                     (needs allowedIpAddress set in V41_main.bicepparam)
 #
@@ -95,12 +95,12 @@ stage_image() {
 
 stage_auth() {
   if [ "$DEMO_MODE" = "true" ]; then log "Demo mode: skipping sign-in setup"; return; fi
-  if [ -n "${OIDC_CLIENT_ID:-}" ] && [ -n "${OIDC_CLIENT_SECRET:-}" ]; then
-    log "Using OIDC_CLIENT_ID / OIDC_CLIENT_SECRET from the environment"; return
+  if [ -n "${OIDC_CLIENT_ID:-}" ]; then
+    log "Using OIDC_CLIENT_ID from the environment"; return
   fi
   log "Creating the Entra app registration"
   eval "$(./V41_setup_auth.sh)"
-  export OIDC_CLIENT_ID OIDC_CLIENT_SECRET
+  export OIDC_CLIENT_ID
 }
 
 stage_app() {
@@ -109,7 +109,7 @@ stage_app() {
   echo >&2
   echo "Portal:         $(output appUrl)" >&2
   echo "Mail sender:    $(output mailSender)" >&2
-  [ "$DEMO_MODE" = "true" ] || echo "Redirect URI:   $(output oidcRedirectUri)" >&2
+  [ "$DEMO_MODE" = "true" ] || echo "Redirect URI:   $(output oidcRedirectUri)  (set by V41_setup_auth.sh)" >&2
   if [ "${SEED_USERS:-false}" = "true" ]; then
     log "Loading users and properties"
     ./V41_seed_users.sh V41_users.csv V41_properties.csv
@@ -121,7 +121,7 @@ case "$STAGE" in
   validate) stage_validate ;;
   infra)    stage_infra ;;
   image)    stage_image ;;
-  auth)     stage_auth; [ -n "${OIDC_CLIENT_ID:-}" ] && echo "Export OIDC_CLIENT_ID/OIDC_CLIENT_SECRET (printed above) before running 'app'." >&2 ;;
+  auth)     stage_auth; [ -n "${OIDC_CLIENT_ID:-}" ] && echo "Export OIDC_CLIENT_ID (printed above) before running 'app'." >&2 ;;
   app)      stage_app ;;
   all)      stage_infra; stage_image; stage_auth; stage_app ;;
   *)        die "Unknown stage '$STAGE'. Use: validate | infra | image | auth | app | all" ;;

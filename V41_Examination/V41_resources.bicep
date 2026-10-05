@@ -45,10 +45,8 @@ param imageName string
 param flowUrl string = ''
 
 param demoMode bool = false
+@description('Client ID of the Entra app registration. The app proves its identity with the managed identity (federated credential), so there is no client secret.')
 param oidcClientId string = ''
-param oidcWellKnownUrl string = ''
-@secure()
-param oidcClientSecret string = ''
 param akutMailExtra string = ''
 param budgetAmount int
 param budgetContactEmails array = []
@@ -83,7 +81,7 @@ var storageSubresources = [
 // demo scale to zero and are only up when somebody uses them.
 var isProd = environmentType == 'prod'
 var officeHoursReplicas = isProd ? 2 : 0
-var authEnabled = !demoMode && !empty(oidcClientId) && !empty(oidcWellKnownUrl)
+var authEnabled = !demoMode && !empty(oidcClientId)
 
 // Built-in role definitions.
 var storageBlobDataContributorRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
@@ -98,20 +96,22 @@ var communicationEmailOwnerRoleId = subscriptionResourceId('Microsoft.Authorizat
 
 // Secrets / env vars that only exist when the feature is configured
 // (Container Apps rejects secrets and env vars with an empty value).
-var appSecrets = concat(
-  empty(flowUrl) ? [] : [
-    {
-      name: 'flow-url'
-      value: flowUrl
-    }
-  ],
-  authEnabled ? [
-    {
-      name: 'oidc-client-secret'
-      value: oidcClientSecret
-    }
-  ] : []
-)
+var flowSecrets = empty(flowUrl) ? [] : [
+  {
+    name: 'flow-url'
+    value: flowUrl
+  }
+]
+// Built-in sign-in without a client secret: the app registration trusts the managed
+// identity (federated credential). Container Apps wants the identity's CLIENT ID in
+// a secret with exactly this name. It is an identifier, not a password.
+var authSecrets = authEnabled ? [
+  {
+    name: 'override-use-mi-fic-assertion-client-id'
+    value: identity.properties.clientId
+  }
+] : []
+var appSecrets = concat(flowSecrets, authSecrets)
 var flowEnv = empty(flowUrl) ? [] : [
   {
     name: 'FLOW_URL'
@@ -683,9 +683,10 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = if (deployApp) {
   ]
 }
 
-// Sign-in: Container Apps built-in authentication with any OpenID Connect provider
-// (Entra ID, Entra External ID, a BankID broker). Everything except /health requires
-// a signed-in user. Only created once the identity provider details are supplied.
+// Sign-in: Container Apps built-in authentication against your Entra ID tenant.
+// Everything except /health requires a signed-in user. The app registration has a
+// federated credential that trusts the managed identity, so no client secret exists.
+// Only created once the app registration exists (V41_setup_auth.sh).
 resource authConfig 'Microsoft.App/containerApps/authConfigs@2024-03-01' = if (deployApp && authEnabled) {
   parent: app
   name: 'current'
@@ -695,26 +696,16 @@ resource authConfig 'Microsoft.App/containerApps/authConfigs@2024-03-01' = if (d
     }
     globalValidation: {
       unauthenticatedClientAction: 'RedirectToLoginPage'
-      redirectToProvider: 'nordvik'
+      redirectToProvider: 'azureactivedirectory'
       excludedPaths: ['/health']
     }
     identityProviders: {
-      customOpenIdConnectProviders: {
-        nordvik: {
-          enabled: true
-          registration: {
-            clientId: oidcClientId
-            clientCredential: {
-              clientSecretSettingName: 'oidc-client-secret'
-            }
-            openIdConnectConfiguration: {
-              wellKnownOpenIdConfiguration: oidcWellKnownUrl
-            }
-          }
-          login: {
-            nameClaimType: 'preferred_username'
-            scopes: ['openid', 'profile', 'email']
-          }
+      azureActiveDirectory: {
+        enabled: true
+        registration: {
+          clientId: oidcClientId
+          clientSecretSettingName: 'override-use-mi-fic-assertion-client-id'
+          openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
         }
       }
     }
@@ -770,7 +761,7 @@ resource job 'Microsoft.App/jobs@2024-03-01' = if (deployApp) {
           identity: identity.id
         }
       ]
-      secrets: appSecrets
+      secrets: flowSecrets
     }
     template: {
       containers: [
@@ -836,6 +827,6 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = if (!empty(budgetCo
 output storageAccountName string = storageAccountName
 output acrName string = acr.name
 output appUrl string = deployApp ? 'https://${app!.properties.configuration.ingress.fqdn}' : ''
-output oidcRedirectUri string = 'https://${appName}.${env.properties.defaultDomain}/.auth/login/nordvik/callback'
+output oidcRedirectUri string = 'https://${appName}.${env.properties.defaultDomain}/.auth/login/aad/callback'
 output environmentDefaultDomain string = env.properties.defaultDomain
 output mailSender string = 'DoNotReply@${emailDomain.properties.mailFromSenderDomain}'
