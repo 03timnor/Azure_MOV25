@@ -1,5 +1,23 @@
-   *.pem
-   id_rsa
-   id_rsa.pub
-   .env
-   *.log
+*.pem
+
+id_rsa
+
+id_rsa.pub
+
+*.log
+
+.v41_image_*
+
+V41_main.local.bicepparam
+
+*.local.*
+
+.env
+
+.env.*
+
+__pycache__/
+
+*.pyc
+
+.venv/
