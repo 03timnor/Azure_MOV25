@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordvik – Hyresgästportal</title>
+<link rel="stylesheet" href="/static/V41_portal.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="plate">NORDVIK</span><span class="brand-sub">Hyresgästportal</span></div>
+  <div class="who" id="who" hidden>
+    <span id="who-name"></span>
+    <span class="unit" id="who-unit" hidden></span>
+    <a id="logout" href="/.auth/logout">Logga ut</a>
+  </div>
+</header>
+<div class="demo-bar" id="demo-bar" hidden>
+  Demomiljö, endast påhittad data. Visa som:
+  <a href="/demo/byt?roll=hyresgast">Hyresgäst Elin</a>
+  <a href="/demo/byt?roll=hyresgast2">Hyresgäst Omar</a>
+  <a href="/demo/byt?roll=forvaltare">Förvaltare</a>
+  <a href="/demo/byt?roll=ekonomi">Ekonomi</a>
+</div>
+<nav class="tabs" id="tabs" role="tablist" aria-label="Portalens delar"></nav>
+<main id="view" tabindex="-1"><p class="muted">Laddar…</p></main>
+<script src="/static/V41_portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+*.bicep
+*.bicepparam
+*.sh
+*.csv
+.v41_image_*
+__pycache__
+*.pyc
+.git

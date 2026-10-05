@@ -1,0 +1,7 @@
+flask>=3.0,<4
+gunicorn>=22.0
+azure-identity>=1.17
+azure-storage-blob>=12.20
+azure-storage-queue>=12.10
+azure-data-tables>=12.5
+azure-communication-email>=1.0

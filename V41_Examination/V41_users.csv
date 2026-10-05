@@ -1,0 +1,5 @@
+upn,roll,namn,fastighet,enhet,fastigheter
+placeholder@exempel.se,hyresgast,Placeholder Hyresgäst,F001,1204,
+placeholder@exempel.se,hyresgast,Placeholder Hyresgäst,F002,0302,
+placeholder@exempel.se,forvaltare,Placeholder Förvaltare,,,F001;F002
+placeholder@exempel.se,ekonomi,Placeholder Ekonomi,,,

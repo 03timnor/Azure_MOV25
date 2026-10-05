@@ -1,0 +1,13 @@
+# Local state written by V41_deploy.sh
+.v41_image_*
+
+# Never commit real values: keep a private copy outside git
+V41_main.local.bicepparam
+*.local.*
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
