@@ -46,6 +46,14 @@ preflight() {
   if grep -qE "^param (callerObjectId|allowedIpAddress) = 'placeholder'" V41_main.bicepparam; then
     die "V41_main.bicepparam still contains 'placeholder' values. Fill them in (or set them to '')."
   fi
+  # Fail early if a built-in role GUID in the Bicep file does not exist in this tenant.
+  local g name bad=0
+  for g in $(grep -oE "roleDefinitions', '[0-9a-f-]{36}'" V41_resources.bicep | grep -oE "[0-9a-f-]{36}" | sort -u); do
+    name=$(az role definition list --name "$g" --query "[0].roleName" -o tsv 2>/dev/null || true)
+    if [ -z "$name" ]; then echo "ERROR: role definition $g does not exist (check V41_resources.bicep)" >&2; bad=1
+    else echo "role ok: $name" >&2; fi
+  done
+  [ "$bad" = 0 ] || die "Fix the role GUIDs above first."
   az extension add --name containerapp --upgrade --only-show-errors -y >/dev/null 2>&1 || true
   log "Subscription: $(az account show --query name -o tsv) | environment: $ENVIRONMENT_TYPE | demo: $DEMO_MODE"
 }

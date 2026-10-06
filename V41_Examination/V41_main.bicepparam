@@ -7,12 +7,12 @@ using 'V41_main.bicep'
 // Object ID of the person/pipeline that deploys (admin access to the storage account):
 //   az ad signed-in-user show --query id -o tsv
 // Use '' to skip.
-param callerObjectId = 'placeholder'
+param callerObjectId = ''
 
 // Public IP allowed through the storage firewall (curl -s https://ifconfig.me).
 // Use '' to keep public network access to the storage account disabled (recommended
 // once you no longer need to browse the data from your own machine).
-param allowedIpAddress = 'placeholder'
+param allowedIpAddress = ''
 
 // Power Automate HTTP trigger URL. It contains a signature, so it is read from the
 // environment and never written into this file:
@@ -41,12 +41,12 @@ param akutMailExtra = ''
 // Cost allocation tags
 param avdelning = 'Fastighetsforvaltning'
 param fastighet = 'gemensam'
-param kostnadsstalle = 'ej-angivet'
-param agare = 'ej-angivet'
+param kostnadsstalle = 'Nordvik'
+param agare = 'Nordvik'
 
 // Budget alerts for the resource group (about 2 500 kr / month).
 param budgetAmount = 2500
-param budgetContactEmails = []
+param budgetContactEmails = ['']
 
 // --------------------------------------------------------------------------
 // Controlled by V41_deploy.sh through environment variables - do not edit.
