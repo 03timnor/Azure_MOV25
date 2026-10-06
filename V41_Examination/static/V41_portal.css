@@ -14,6 +14,7 @@
   --font: "Avenir Next", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--mist); color: var(--ink); font: 16px/1.5 var(--font); }
 a { color: var(--fjord); }
 .muted { color: var(--muted); }

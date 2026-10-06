@@ -239,7 +239,12 @@
     me = m;
     document.getElementById("who").hidden = false;
     document.getElementById("who-name").textContent = m.namn + " (" + (ROLE[m.roll] || m.roll) + ")";
-    if (m.roll === "hyresgast" && m.enhet) { var u = document.getElementById("who-unit"); u.textContent = "Enhet " + m.enhet; u.hidden = false; }
+    if (m.roll === "hyresgast" && m.enhet) {
+      var u = document.getElementById("who-unit");
+      var prop = m.fastigheter && m.fastigheter[0];
+      u.textContent = (prop && prop.namn ? prop.namn + ", " : "") + "enhet " + m.enhet;
+      u.hidden = false;
+    }
     if (m.demo) { document.getElementById("demo-bar").hidden = false; document.getElementById("logout").hidden = true; }
     buildTabs();
   }).catch(function (e) { clear(view); view.appendChild(error(e.message)); });

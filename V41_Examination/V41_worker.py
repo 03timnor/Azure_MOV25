@@ -82,19 +82,40 @@ def _send_urgent_mail(entity, recipients):
 def handle(msg):
     tbl = c.table(c.TICKETS_TABLE)
     entity = tbl.get_entity(msg["fastighet"], msg["id"])
+    ticket_id = entity["RowKey"]
     manager_mail = c.list_properties().get(entity["PartitionKey"], {}).get("forvaltarMail", "")
-    done = {}
+    done, errors = {}, []
+
+    # The urgent e-mail goes first and never depends on Power Automate: a broken
+    # flow must not stop an urgent report from reaching the manager.
+    if entity.get("akut") and not entity.get("mailSkickad"):
+        recipients = [a for a in [manager_mail] + c.AKUT_MAIL_EXTRA if a]
+        try:
+            _send_urgent_mail(entity, recipients)
+            done["mailSkickad"] = True
+            log.info("Urgent mail sent for ticket %s (%s recipient(s))", ticket_id, len(recipients))
+        except Exception as e:
+            log.exception("Urgent mail FAILED for ticket %s (%s recipient(s))", ticket_id, len(recipients))
+            errors.append(e)
 
     if c.FLOW_URL and not entity.get("flowSkickad"):
-        _post_flow(entity, manager_mail)
-        done["flowSkickad"] = True
-    if entity.get("akut") and not entity.get("mailSkickad"):
-        _send_urgent_mail(entity, [a for a in [manager_mail] + c.AKUT_MAIL_EXTRA if a])
-        done["mailSkickad"] = True
+        try:
+            _post_flow(entity, manager_mail)
+            done["flowSkickad"] = True
+            log.info("Power Automate notified for ticket %s", ticket_id)
+        except Exception as e:
+            log.exception("Power Automate call FAILED for ticket %s", ticket_id)
+            errors.append(e)
 
-    done.update({"PartitionKey": entity["PartitionKey"], "RowKey": entity["RowKey"],
-                 "notis": "klar", "notisTid": datetime.now(timezone.utc).isoformat()})
-    tbl.update_entity(done, mode=UpdateMode.MERGE)
+    # Record what succeeded, so a retry only repeats the step that failed.
+    update = dict(done, PartitionKey=entity["PartitionKey"], RowKey=ticket_id)
+    if not errors:
+        update.update({"notis": "klar", "notisTid": datetime.now(timezone.utc).isoformat()})
+    else:
+        update["notisFel"] = str(errors[0])[:500]
+    tbl.update_entity(update, mode=UpdateMode.MERGE)
+    if errors:
+        raise errors[0]
 
 
 def main():
