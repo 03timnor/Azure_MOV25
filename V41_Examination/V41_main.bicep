@@ -91,9 +91,6 @@ param akutMailExtra string = ''
 @description('Tag avdelning: which department pays for the platform')
 param avdelning string = 'Fastighetsforvaltning'
 
-@description('Tag fastighet: property the resources belong to. The portal is shared by all properties, so the default is gemensam.')
-param fastighet string = 'gemensam'
-
 @description('Tag kostnadsstalle')
 param kostnadsstalle string = 'ej-angivet'
 
@@ -114,7 +111,6 @@ var tags = {
   applikation: 'hyresgastportal'
   miljo: environmentType
   avdelning: avdelning
-  fastighet: fastighet
   kostnadsstalle: kostnadsstalle
   agare: agare
 }
