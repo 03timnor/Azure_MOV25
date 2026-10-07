@@ -37,7 +37,8 @@ param oidcClientId = readEnvironmentVariable('OIDC_CLIENT_ID', '')
 
 // Shared mailbox that gets an e-mail for EVERY report. Urgent reports also go to the
 // property manager. '' = no mail for ordinary reports. Example: 'felanmalan@nordvik.se'
-param delatBrevladaMail = ''
+// NOT CONFIGURED, POWERAUTOMATE FLOW IS USED INSTEAD.
+// param delatBrevladaMail = ''
 
 // Extra recipients for urgent reports, e.g. 'jour@nordvik.example'
 param akutMailExtra = ''
