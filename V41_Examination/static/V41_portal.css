@@ -84,3 +84,10 @@ td.num, th.num { text-align: right; }
 ul.docs { list-style: none; padding: 0; margin: 0; }
 ul.docs li { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 @media (prefers-reduced-motion: no-preference) { button.primary { transition: background .15s; } }
+
+.solution-box { background: var(--klar-bg); border-left: 4px solid var(--klar); padding: 8px 14px; border-radius: 0 4px 4px 0; margin-top: 12px; }
+.solution-box p { margin: 4px 0 0; }
+.manage { margin-top: 14px; display: grid; gap: 10px; }
+.manage select { width: auto; margin-left: 6px; }
+.manage textarea.solution { min-height: 84px; }
+.manage .row { margin-top: 0; }

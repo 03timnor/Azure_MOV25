@@ -84,6 +84,16 @@ param demoMode bool = false
 @description('Client ID of the Entra app registration. Created by V41_setup_auth.sh. Leave empty until it exists (the portal is then locked, not open). There is no client secret: the app registration trusts the managed identity.')
 param oidcClientId string = ''
 
+@description('Shared mailbox that receives an e-mail for every report. Urgent reports also go to the property manager. Leave empty to send no mail for ordinary reports.')
+param delatBrevladaMail string = ''
+
+@allowed([
+  'event'
+  'schedule'
+])
+@description('How the notification job starts. event (default) = when the queue has messages. schedule = every minute. NOTE: the trigger type of an existing job cannot be changed; delete the job first (az containerapp job delete).')
+param notisJobTrigger string = 'event'
+
 @description('Extra recipients (comma separated) for urgent reports, besides the property manager')
 param akutMailExtra string = ''
 
@@ -152,6 +162,8 @@ module nordvik 'V41_resources.bicep' = {
     demoMode: demoMode && environmentType != 'prod'
     oidcClientId: oidcClientId
     akutMailExtra: akutMailExtra
+    delatBrevladaMail: delatBrevladaMail
+    notisJobTrigger: notisJobTrigger
     budgetAmount: budgetAmount
     budgetContactEmails: budgetContactEmails
     budgetStartDate: budgetStartDate

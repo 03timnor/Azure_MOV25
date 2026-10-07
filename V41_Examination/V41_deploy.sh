@@ -14,9 +14,13 @@
 # Environment variables (all optional)
 #   ENVIRONMENT_TYPE  prod (default) | test | demo
 #   DEMO_MODE         true = fake demo users instead of real sign-in (not in prod)
-#   LOCATION          Azure region for the deployment record (default swedencentral)
+#   AZURE_LOCATION    Azure region for everything (default swedencentral). Use another
+#                     region if Azure reports a capacity shortage (see below).
 #   IMAGE_NAME        Image and tag, e.g. portal:v7. Default: portal:<timestamp>
-#   FLOW_URL          Power Automate trigger URL (kept out of files on purpose)
+#   FLOW_URL          Power Automate trigger URL. Either export it, or put it in the
+#                     git-ignored file V41_deploy.local.env (see V41_deploy.env.example),
+#                     which this script loads automatically. If it is missing, the
+#                     deployment REMOVES the flow secret and the flow is no longer called.
 #   OIDC_CLIENT_ID    Reuse an existing app registration (otherwise
 #                     V41_setup_auth.sh creates one in stage "auth"; no secret is used)
 #   SEED_USERS        true = load V41_users.csv / V41_properties.csv after "app"
@@ -29,10 +33,14 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Optional private settings (FLOW_URL, OIDC_CLIENT_ID, ...) from a git-ignored file.
+if [ -f V41_deploy.local.env ]; then set -a; . ./V41_deploy.local.env; set +a; fi
+
 STAGE="${1:-all}"
 export ENVIRONMENT_TYPE="${ENVIRONMENT_TYPE:-prod}"
 export DEMO_MODE="${DEMO_MODE:-false}"
-LOCATION="${LOCATION:-swedencentral}"
+export AZURE_LOCATION="${AZURE_LOCATION:-${LOCATION:-swedencentral}}"
+LOCATION="$AZURE_LOCATION"
 DEPLOY_NAME="nordvik-${ENVIRONMENT_TYPE}"
 IMAGE_FILE=".v41_image_${ENVIRONMENT_TYPE}"
 
@@ -69,9 +77,14 @@ deploy() {  # $1 = true|false (deploy the app and job?)
          --parameters V41_main.bicepparam --only-show-errors -o none; then
       return 0
     fi
-    # Freshly created role assignments (AcrPull) can take a minute to propagate.
-    [ "$attempt" = 1 ] && [ "$DEPLOY_APP" = "true" ] && { log "Deployment failed, retrying once in 60 s"; sleep 60; }
+    # Only the app deployment is retried: freshly created role assignments (AcrPull)
+    # can take a minute to propagate. Other failures are not helped by an instant retry.
+    [ "$DEPLOY_APP" = "true" ] || break
+    [ "$attempt" = 1 ] && { log "Deployment failed, retrying once in 60 s"; sleep 60; }
   done
+  echo "If the error mentions capacity (e.g. CapacityHeavyUsage): wait and run again, or switch region:" >&2
+  echo "  az group delete -n rg-nordvik-${ENVIRONMENT_TYPE} --yes && az group wait --deleted -n rg-nordvik-${ENVIRONMENT_TYPE}" >&2
+  echo "  AZURE_LOCATION=northeurope ./V41_deploy.sh" >&2
   die "Deployment failed."
 }
 
@@ -112,11 +125,17 @@ stage_auth() {
 }
 
 stage_app() {
+  if [ -z "${FLOW_URL:-}" ]; then
+    echo "WARNING: FLOW_URL is not set. The deployment will REMOVE the Power Automate secret and" >&2
+    echo "         the flow will not be called. Press Ctrl+C within 10 s to cancel." >&2
+    sleep 10
+  fi
   log "Deployment 2: container app and notification job"
   deploy true
   echo >&2
   echo "Portal:         $(output appUrl)" >&2
   echo "Mail sender:    $(output mailSender)" >&2
+  echo "Flow check:     $(output appUrl)/health  (flow_configured should be true)" >&2
   [ "$DEMO_MODE" = "true" ] || echo "Redirect URI:   $(output oidcRedirectUri)  (set by V41_setup_auth.sh)" >&2
   if [ "${SEED_USERS:-false}" = "true" ]; then
     log "Loading users and properties"

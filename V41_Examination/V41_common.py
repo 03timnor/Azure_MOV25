@@ -11,6 +11,7 @@
 #   FLOW_URL          Optional Power Automate HTTP trigger URL (stored as a secret)
 #   ACS_ENDPOINT      Azure Communication Services endpoint (e-mail for urgent reports)
 #   MAIL_SENDER       Sender address on the ACS e-mail domain
+#   SHARED_MAILBOX    Shared mailbox that gets an e-mail for EVERY report
 #   AKUT_MAIL_EXTRA   Optional comma-separated extra recipients for urgent reports
 #   PORTAL_URL        Public URL of the portal (used in e-mails)
 
@@ -30,6 +31,7 @@ AUTH_MODE = os.environ.get("AUTH_MODE", "easyauth")
 FLOW_URL = os.environ.get("FLOW_URL", "")
 ACS_ENDPOINT = os.environ.get("ACS_ENDPOINT", "")
 MAIL_SENDER = os.environ.get("MAIL_SENDER", "")
+SHARED_MAILBOX = os.environ.get("SHARED_MAILBOX", "").strip()
 AKUT_MAIL_EXTRA = [a.strip() for a in os.environ.get("AKUT_MAIL_EXTRA", "").split(",") if a.strip()]
 PORTAL_URL = os.environ.get("PORTAL_URL", "")
 

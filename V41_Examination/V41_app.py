@@ -133,8 +133,11 @@ def _public_ticket(e, role):
         "skapad": e.get("skapad", ""),
         "uppdaterad": e.get("uppdaterad", ""),
         "harBild": bool(e.get("bild", "")),
+        "losning": e.get("losning", ""),
+        "losningTid": e.get("losningTid", ""),
     }
     if role == "forvaltare":
+        out["losningAv"] = e.get("losningAv", "")
         out["hyresgastNamn"] = e.get("hyresgastNamn", "")
         out["hyresgastMail"] = e.get("hyresgastMail", "")
     return out
@@ -262,6 +265,7 @@ def create_ticket():
     #    queue problem must not fail the request from the tenant's point of view.
     try:
         c.queue(c.QUEUE_NAME).send_message(json.dumps({"fastighet": pid, "id": ticket_id}))
+        app.logger.info("Queued notification for ticket %s", ticket_id)
     except Exception:
         app.logger.exception("Could not queue notification for ticket %s", ticket_id)
 
@@ -319,18 +323,27 @@ def ticket_image(ticket_id):
 @app.post("/api/arenden/<ticket_id>/status")
 @needs_roles("forvaltare")
 def set_status(ticket_id):
-    status = (request.get_json(silent=True) or {}).get("status", "")
+    # Body: {"status": "ny|pagar|klar", "losning": "text"}. "losning" is optional:
+    # if it is left out, the saved solution is not touched.
+    body = request.get_json(silent=True) or {}
+    status = body.get("status", "")
     if status not in c.STATUSES:
         return _err(400, "Ogiltig status.")
     e = _get_ticket(g.user, ticket_id)
     if e is None:
         return _err(404, "Ärendet finns inte.")
-    c.table(c.TICKETS_TABLE).update_entity(
-        {"PartitionKey": e["PartitionKey"], "RowKey": e["RowKey"], "status": status,
-         "uppdaterad": datetime.now(timezone.utc).isoformat()},
-        mode=UpdateMode.MERGE,
-    )
-    return jsonify({"id": ticket_id, "status": status})
+    now = datetime.now(timezone.utc).isoformat()
+    update = {"PartitionKey": e["PartitionKey"], "RowKey": e["RowKey"], "status": status, "uppdaterad": now}
+    losning = e.get("losning", "")
+    if "losning" in body:
+        new = str(body.get("losning") or "").strip()[:4000]
+        if new != losning:
+            losning = new
+            update["losning"] = new
+            update["losningAv"] = g.user["namn"] if new else ""
+            update["losningTid"] = now if new else ""
+    c.table(c.TICKETS_TABLE).update_entity(update, mode=UpdateMode.MERGE)
+    return jsonify({"id": ticket_id, "status": status, "losning": losning})
 
 
 # ---- Documents (contracts, inspection protocols) -------------------------

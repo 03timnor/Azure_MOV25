@@ -35,6 +35,10 @@ param ekonomiGroupId = ''
 //   export OIDC_CLIENT_ID='...'
 param oidcClientId = readEnvironmentVariable('OIDC_CLIENT_ID', '')
 
+// Shared mailbox that gets an e-mail for EVERY report. Urgent reports also go to the
+// property manager. '' = no mail for ordinary reports. Example: 'felanmalan@nordvik.se'
+param delatBrevladaMail = ''
+
 // Extra recipients for urgent reports, e.g. 'jour@nordvik.example'
 param akutMailExtra = ''
 
@@ -56,11 +60,16 @@ param environmentType = readEnvironmentVariable('ENVIRONMENT_TYPE', 'prod')
 param demoMode = readEnvironmentVariable('DEMO_MODE', 'false') == 'true'
 param deployApp = readEnvironmentVariable('DEPLOY_APP', 'false') == 'true'
 param imageName = readEnvironmentVariable('IMAGE_NAME', 'portal:v1')
+// Region. If Azure reports a capacity shortage, try another one, e.g.
+//   AZURE_LOCATION=northeurope ./V41_deploy.sh
+param location = readEnvironmentVariable('AZURE_LOCATION', 'swedencentral')
+// Notification job trigger: 'event' (default) or 'schedule' (every minute). Use 'schedule'
+// if the job never starts by itself:  NOTIS_TRIGGER=schedule ./V41_deploy.sh app
+param notisJobTrigger = readEnvironmentVariable('NOTIS_TRIGGER', 'event')
 
 // --------------------------------------------------------------------------
 // Optional - defaults live in V41_main.bicep. Uncomment to override.
 // --------------------------------------------------------------------------
-// param location = 'swedencentral'
 // param resourceGroupName = 'rg-nordvik-prod'
 // param vnetName = 'vnet-nordvik-prod'
 // param vnetAddressPrefix = '10.0.0.0/16'

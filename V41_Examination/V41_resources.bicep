@@ -48,6 +48,14 @@ param demoMode bool = false
 @description('Client ID of the Entra app registration. The app proves its identity with the managed identity (federated credential), so there is no client secret.')
 param oidcClientId string = ''
 param akutMailExtra string = ''
+param delatBrevladaMail string = ''
+
+@allowed([
+  'event'
+  'schedule'
+])
+@description('How the notification job starts: event = when the queue has messages (scales to zero), schedule = every minute and empties the queue (does not depend on the queue scaler reaching storage).')
+param notisJobTrigger string = 'event'
 param budgetAmount int
 param budgetContactEmails array = []
 param budgetStartDate string
@@ -124,6 +132,13 @@ var akutEnv = empty(akutMailExtra) ? [] : [
     value: akutMailExtra
   }
 ]
+var jobIsEvent = notisJobTrigger == 'event'
+var sharedMailEnv = empty(delatBrevladaMail) ? [] : [
+  {
+    name: 'SHARED_MAILBOX'
+    value: delatBrevladaMail
+  }
+]
 var baseEnv = concat([
   {
     name: 'STORAGE_ACCOUNT'
@@ -157,7 +172,7 @@ var baseEnv = concat([
     name: 'MAIL_SENDER'
     value: 'DoNotReply@${emailDomain.properties.mailFromSenderDomain}'
   }
-], akutEnv, flowEnv)
+], akutEnv, sharedMailEnv, flowEnv)
 
 // --------------------------------------------------------------------------
 // Identity (image pull, storage access, e-mail sending)
@@ -730,10 +745,15 @@ resource job 'Microsoft.App/jobs@2024-03-01' = if (deployApp) {
     environmentId: env.id
     workloadProfileName: 'Consumption'
     configuration: {
-      triggerType: 'Event'
+      triggerType: jobIsEvent ? 'Event' : 'Schedule'
       replicaTimeout: 600
       replicaRetryLimit: 1
-      eventTriggerConfig: {
+      scheduleTriggerConfig: jobIsEvent ? null : {
+        cronExpression: '* * * * *'
+        parallelism: 1
+        replicaCompletionCount: 1
+      }
+      eventTriggerConfig: !jobIsEvent ? null : {
         parallelism: 1
         replicaCompletionCount: 1
         scale: {

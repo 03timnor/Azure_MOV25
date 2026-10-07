@@ -51,7 +51,8 @@
   // ---------- tickets ----------
   function ticketCard(t, manager) {
     var card = h("article", { class: "ticket" + (t.akut ? " akut" : "") });
-    var chips = h("span", null, h("span", { class: "chip " + t.status, text: STATUS[t.status] || t.status }));
+    var statusChip = h("span", { class: "chip " + t.status, text: STATUS[t.status] || t.status });
+    var chips = h("span", null, statusChip);
     if (t.akut) chips.appendChild(h("span", { class: "chip akut", text: "Akut" }));
     card.appendChild(h("div", { class: "ticket-head" },
       h("span", { class: "ticket-title", text: t.rubrik || t.kategoriNamn }), chips));
@@ -61,18 +62,36 @@
     if (manager && t.hyresgastMail) card.appendChild(h("div", { class: "meta", text: t.hyresgastMail }));
     card.appendChild(h("p", { text: t.beskrivning }));
     if (t.harBild) card.appendChild(h("img", { src: "/api/arenden/" + encodeURIComponent(t.id) + "/bild", alt: "Bifogad bild", loading: "lazy" }));
+    if (!manager && t.losning) {
+      card.appendChild(h("div", { class: "solution-box" },
+        h("strong", { text: "Lösning" + (t.losningTid ? " (" + fmtDate(t.losningTid) + ")" : "") }),
+        h("p", { text: t.losning })));
+    }
     if (manager) {
-      var sel = h("select", { "aria-label": "Ändra status" });
+      var sel = h("select", { "aria-label": "Status" });
       Object.keys(STATUS).forEach(function (k) {
         var o = h("option", { value: k, text: STATUS[k] }); if (k === t.status) o.selected = true; sel.appendChild(o);
       });
+      var ta = h("textarea", { class: "solution", maxlength: "4000", "aria-label": "Lösning",
+        placeholder: "Lösning: beskriv vad som har gjorts. Hyresgästen ser texten." });
+      ta.value = t.losning || "";
       var msg = h("span", { class: "meta", "aria-live": "polite" });
-      sel.addEventListener("change", function () {
+      var save = h("button", { class: "primary", type: "button", text: "Spara" });
+      save.addEventListener("click", function () {
+        if (sel.value === "klar" && !ta.value.trim() && !confirm("Markera som klar utan lösning?")) return;
+        save.disabled = true; msg.textContent = "";
         api("/api/arenden/" + encodeURIComponent(t.id) + "/status", {
-          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: sel.value })
-        }).then(function () { msg.textContent = "Sparat."; }).catch(function (e) { msg.textContent = e.message; });
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: sel.value, losning: ta.value })
+        }).then(function (r) {
+          statusChip.className = "chip " + r.status; statusChip.textContent = STATUS[r.status] || r.status;
+          msg.textContent = "Sparat.";
+        }).catch(function (e) { msg.textContent = e.message; })
+          .then(function () { save.disabled = false; });
       });
-      card.appendChild(h("div", { class: "row" }, h("label", { class: "meta" }, "Status ", sel), msg));
+      card.appendChild(h("div", { class: "manage" },
+        h("label", { class: "meta" }, "Status ", sel), ta,
+        h("div", { class: "row" }, save, msg)));
     }
     return card;
   }
