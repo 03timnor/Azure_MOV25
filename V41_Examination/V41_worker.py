@@ -57,7 +57,11 @@ def _post_flow(entity, manager_mail):
     }
     req = urllib.request.Request(
         c.FLOW_URL, data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        headers={"Content-Type": "application/json"}, method="POST",
+        headers={
+            "Content-Type": "application/json; charset=utf-8",
+            "User-Agent": "NordvikWorker/1.0"
+        },
+        method="POST",
     )
     urllib.request.urlopen(req, timeout=30).read()
 

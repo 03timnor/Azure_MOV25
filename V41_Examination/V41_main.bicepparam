@@ -26,8 +26,8 @@ param flowUrl = readEnvironmentVariable('FLOW_URL', '')
 
 // Entra groups. Managers get read/write on contracts and protocols; finance gets
 // Cost Management Reader only (no access to personal data).
-param forvaltareGroupId = ''
-param ekonomiGroupId = ''
+param forvaltareGroupId = 'placeholder'
+param ekonomiGroupId = 'placeholder'
 
 // Sign-in against your own Entra ID tenant (same accounts and UPNs for tenants and staff).
 // No client secret: the app registration trusts the portal's managed identity.
@@ -38,19 +38,19 @@ param oidcClientId = readEnvironmentVariable('OIDC_CLIENT_ID', '')
 // Shared mailbox that gets an e-mail for EVERY report. Urgent reports also go to the
 // property manager. '' = no mail for ordinary reports. Example: 'felanmalan@nordvik.se'
 // NOT CONFIGURED, POWERAUTOMATE FLOW IS USED INSTEAD.
-// param delatBrevladaMail = ''
+param delatBrevladaMail = ''
 
 // Extra recipients for urgent reports, e.g. 'jour@nordvik.example'
 param akutMailExtra = ''
 
 // Cost allocation tags
 param avdelning = 'Fastighetsforvaltning'
-param kostnadsstalle = 'ej-angivet'
-param agare = 'ej-angivet'
+param kostnadsstalle = 'Nordvik_Economy'
+param agare = 'Nordvik_Fastigheter_AB'
 
 // Budget alerts for the resource group (about 2 500 kr / month).
 param budgetAmount = 2500
-param budgetContactEmails = []
+param budgetContactEmails = ['placeholder']
 
 // --------------------------------------------------------------------------
 // Controlled by V41_deploy.sh through environment variables - do not edit.
