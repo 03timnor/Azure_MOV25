@@ -124,7 +124,7 @@ ENVIRONMENT_TYPE=demo DEMO_MODE=true ./V41_deploy.sh
 
 *__OBS!__* Ha alltid med `NOTIS_TRIGGER=schedule` innan `./V41_deploy.sh`. Detta fixar så att notisjobbet fungerar som det ska.
 
-*__OBS!__* Fyll i uppgifter i *V41_main.biceparm* där det behövs. Där kan man även ändra olika parametrar för att ändra hur miljön ska se ut och så vidare. Parameter *param delatBrevladaMail* skall inte fyllas i då *PowerAutomate* flöde används istället.
+*__OBS!__* Fyll i uppgifter i *V41_main.bicepparm* där det behövs. Där kan man även ändra olika parametrar för att ändra hur miljön ska se ut och så vidare. Parameter *param delatBrevladaMail* skall inte fyllas i då *PowerAutomate* flöde används istället.
 
 *__OBS!__* Fyll i uppgifter i *V41_users.csv* och *V41_properties.csv*. (*V41_users.csv* skapar inte användare, de måste finnas i *Entra* innan det körs).
 
@@ -248,7 +248,7 @@ __Flödet från anmälan till notis__
 |---|---|
 | **Syfte** | Akuta ärenden ska ge ett omedelbart mail till ansvarig förvaltare, även om PowerAutomate eller Microsoft 365 har problem. |
 | **Vad som är akut** | Kategorin avgör (`akut: true` på kategorin), inte hyresgästens val. |
-| **Mottagare** | Ansvarig förvaltare (från tabellen `Fastigheter`).
+| **Mottagare** | Ansvarig förvaltare (från tabellen `Fastigheter`). |
 | **Vanliga ärenden** | Inget mail från Azure. De hanteras helt av PowerAutomate (delad brevlåda och bekräftelse till hyresgästen). Parametrarna `SHARED_MAILBOX` och `delatBrevladaMail` lämnas tomma. |
 | **Avsändare** | Azure Communication Services med en Azure-hanterad domän (en `DoNotReply`-adress), inte hyresgästens eller någon persons adress. |
 | **Oberoende av flödet** | Mailet skickas före flödesanropet. Ett trasigt flöde stoppar alltså aldrig ett akutmail. |
@@ -349,11 +349,11 @@ Hur miljön har dokumenterats och beskrivts i tidigare steg. Men en kortfattad t
 | Budget och kostnadsroll (valfria) | – | Budgetvarning samt Cost Management Reader för ekonomi |
 | Utanför Azure | – | Power Automate-flöde (SharePoint-lista, mail till delad brevlåda och till hyresgästen) och Entra-appregistrering för inloggning |
 
-Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s*  behov och önskemål. Sen behövde jag ha i åtanke vad jag realistiskt kunde hinna med på cirka 7 dagar. Det finns saker man hade kunnat utveckla om man hade mer tid, ett exempel kan vara en bättre lösning på hur avtal och dokument laddas upp till storage. I dagsläget måste man gå in i bloben och göra det, och det är det bara jag som kan göra (på grund av behörigheter). Man hade kunnat integrera detta i applikationen / webbsidan, men detta fick prioriteras bort då *Nordvik Fastigheter AB:s* uttryckta behov och önskemål gick före och tog upp den tid som fanns tillgänglig.
+Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s* behov och önskemål. Sen behövde jag ha i åtanke vad jag realistiskt kunde hinna med på cirka 7 dagar. Det finns saker man hade kunnat utveckla om man hade mer tid, ett exempel kan vara en bättre lösning på hur avtal och dokument laddas upp till storage. I dagsläget måste man gå in i bloben och göra det, och det är det bara jag som kan göra (på grund av behörigheter). Man hade kunnat integrera detta i applikationen / webbsidan, men detta fick prioriteras bort då *Nordvik Fastigheter AB:s* uttryckta behov och önskemål gick före och tog upp den tid som fanns tillgänglig.
 
-Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostanden inom bugetens ram . Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
+Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostanden inom budgetens ram. Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
 
-Lösningen återskpas även med kod, kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.biceparm*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske den dock inte ens GitHub Repository skall vara publikt).
+Lösningen återskapas även med kod. Kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.bicepparm*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske dock inte *GitHub* Repository ska vara publikt).
 
 ### *__7. Verifiering__*
 
@@ -1485,7 +1485,7 @@ output environmentDefaultDomain string = nordvik.outputs.environmentDefaultDomai
 output mailSender string = nordvik.outputs.mailSender
 ```
 
-#### __V41_main.biceparm__
+#### __V41_main.bicepparm__
 
 ```bicep
 using 'V41_main.bicep'
