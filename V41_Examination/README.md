@@ -140,7 +140,7 @@ Portalen har en *Managed Identity* som används av både webbappen och notisjobb
 |---|---|---|---|---|
 | Container `felanmalan` (bilder) | Storage Blob Data Contributor | Bara den containern | Sparar och läser felanmälningsbilder | Hyresgäster laddar upp foton, och förvaltare ser dem. Rollen ges på containern, inte på hela lagringskontot, så att den inte når kontrakten. |
 | Container `avtal` (kontrakt) | Storage Blob Data Reader | Bara den containern | Läser kontrakt och protokoll åt rätt användare | Portalen ska bara visa dokument och aldrig ändra eller radera dem. Läsrätt räcker, så det blir least privilege. |
-| Tabeller (`Arenden`, `Anvandare`, `Fastigheter`) | Storage Table Data Contributor | Hela lagringskontot | Skapar och uppdaterar ärenden, läser användare och fastigheter | Ärendena sparas som rader i tabellen och statusen uppdateras av förvaltare. Rollen kan inte begränsas till enskilda tabeller. |
+| Tabeller (`arenden`, `anvandare`, `fastigheter`) | Storage Table Data Contributor | Hela lagringskontot | Skapar och uppdaterar ärenden, läser användare och fastigheter | Ärendena sparas som rader i tabellen och statusen uppdateras av förvaltare. Rollen kan inte begränsas till enskilda tabeller. Rollen ges på kontonivå. |
 | Köer (`notiser`, `notiser-poison`) | Storage Queue Data Contributor | Hela lagringskontot | Lägger notiser i kön, och jobbet läser och tar bort dem | Kön kopplar ihop en ny anmälan med utskick av e-post och flöde. Den gör att anmälan inte blockeras om utskicket misslyckas. |
 | Container Registry | AcrPull | Registret | Hämtar containerbilden vid start | Container Apps måste kunna hämta appens image utan lösenord. Rollen tillåter bara att hämta, inte att ladda upp eller ändra. |
 | Azure Communication Services (e-post) | Communication and Email Service Owner | Bara ACS-resursen | Skickar akuta och vanliga notismejl | Notisjobbet skickar e-post till förvaltare och den delade brevlådan. Rollen behövs för att få skicka via tjänsten. |
@@ -155,9 +155,9 @@ Storage konto *IAM*:
 
 | Roll | Vad de får | Hur det framtvingas |
 |---|---|---|
-| **Hyresgäst** | Skapa och se sina egna anmälningar och dokument i sin egen lägenhet | **1. Inloggning:** användaren loggar in med sitt Entra-konto (*UPN*) och måste finnas i användartabellen `Anvandare`.<br>**2. Rollkontroll:** bara rollen hyresgäst får skapa en anmälan (`needs_roles("hyresgast")`). Andra roller får 403.<br>**3. Egen data:** ärendelistan filtreras på hyresgästens egen fastighet och eget användar-ID. Andras ärenden syns aldrig, och försöker man öppna ett annat ärende får man 404.<br>**4. Dokument:** bara filer under den egna sökvägen `fastighet/lägenhet/` kan läsas.<br>**5. Azure:** hyresgästen har ingen Azure-roll och når aldrig lagringen direkt, bara via portalen. |
-| **Förvaltare** | Se ärenden för sina fastigheter, sätta status och skriva lösning, läsa dokument för sina fastigheter | **1. Inloggning:** som ovan, med rad i `Anvandare`.<br>**2. Rollkontroll:** bara rollen förvaltare får ändra status och skriva lösning (`needs_roles("forvaltare")`). Hyresgäster och ekonomi får 403.<br>**3. Fastighetskontroll:** förvaltaren kommer bara åt ärenden i fastigheterna i sin egen rad i `Anvandare` (kolumnen `fastigheter`, till exempel `F1;F2`). Ärenden i andra fastigheter syns inte i listan, och försök att ändra dem ger 404.<br>**4. Dokument:** bara filer under de egna fastigheternas sökvägar kan läsas, med skydd mot sökvägstrick som `..`.<br>**5. Azure:** Entra-gruppen för förvaltare kan ges Blob Contributor på containern `avtal` för att ladda upp kontrakt. |
-| **Ekonomi** | Läsande insyn i anonym statistik, samt kostnadsuppföljning i Azure | **1. Inloggning:** som ovan, med rad i `Anvandare`.<br>**2. Begränsad åtkomst:** ekonomi får bara anropa statistik (`/api/statistik`), som visar sammanställda siffror utan namn eller ärendetexter.<br>**3. Spärr på känsliga anrop:** alla anrop till enskilda ärenden och dokument ger 403.<br>**4. Azure:** Entra-gruppen för ekonomi får rollen Cost Management Reader på resursgruppen, så att de kan se kostnader men inte läsa data. |
+| **Hyresgäst** | Skapa och se sina egna anmälningar och dokument i sin egen lägenhet | **1. Inloggning:** användaren loggar in med sitt Entra-konto (*UPN*) och måste finnas i användartabellen `anvandare`.<br>**2. Rollkontroll:** bara rollen hyresgäst får skapa en anmälan (`needs_roles("hyresgast")`). Andra roller får 403.<br>**3. Egen data:** ärendelistan filtreras på hyresgästens egen fastighet och eget användar-ID. Andras ärenden syns aldrig, och försöker man öppna ett annat ärende får man 404.<br>**4. Dokument:** bara filer under den egna sökvägen `fastighet/lägenhet/` kan läsas.<br>**5. Azure:** hyresgästen har ingen Azure-roll och når aldrig lagringen direkt, bara via portalen. |
+| **Förvaltare** | Se ärenden för sina fastigheter, sätta status och skriva lösning, läsa dokument för sina fastigheter | **1. Inloggning:** som ovan, med rad i `anvandare`.<br>**2. Rollkontroll:** bara rollen förvaltare får ändra status och skriva lösning (`needs_roles("forvaltare")`). Hyresgäster och ekonomi får 403.<br>**3. Fastighetskontroll:** förvaltaren kommer bara åt ärenden i fastigheterna i sin egen rad i `anvandare` (kolumnen `fastigheter`, till exempel `F001;F002`). Ärenden i andra fastigheter syns inte i listan, och försök att ändra dem ger 404.<br>**4. Dokument:** bara filer under de egna fastigheternas sökvägar kan läsas, med skydd mot sökvägstrick som `..`.<br>**5. Azure:** Entra-gruppen för förvaltare kan ges Blob Contributor på containern `avtal` för att ladda upp kontrakt. |
+| **Ekonomi** | Läsande insyn i anonym statistik, samt kostnadsuppföljning i Azure | **1. Inloggning:** som ovan, med rad i `anvandare`.<br>**2. Begränsad åtkomst:** ekonomi får bara anropa statistik (`/api/statistik`), som visar sammanställda siffror utan namn eller ärendetexter.<br>**3. Spärr på känsliga anrop:** alla anrop till enskilda ärenden och dokument ger 403.<br>**4. Azure:** Entra-gruppen för ekonomi får rollen Cost Management Reader på resursgruppen, så att de kan se kostnader men inte läsa data. |
 
 #### __Least-privilege__
 
@@ -222,7 +222,7 @@ Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exemp
 | 2. Validering av bild | Filändelsen måste vara JPG, PNG, WEBP eller HEIC, och bilden får vara högst 8 MB | – |
 | 3. Bilden sparas | Sökvägen byggs av fastighet och ärende-id (`fastighet/ärende-id/bild.ext`). Användarens eget filnamn används aldrig. | Containern `felanmalan` |
 | 4. Ärendet sparas | Fälten och sökvägen till bilden sparas som en rad | Tabellen `arenden` |
-| 5. Notis köas | Ett meddelande läggs i kön och startar notisjobbet. Misslyckas det är anmälan ändå sparad. | Kön `notiser` |
+| 5. Notis köas | Ett meddelande läggs i kön och notisjobbet plockar upp det vid nästa körning (varje minut). Misslyckas något är anmälan ändå sparad. | Kön `notiser` |
 
 ### *__5. Automation och integration__*
 
@@ -474,6 +474,14 @@ Demomiljön fungerar:
 Lifecycle management:
 
 ![alt text](images/lifecycle_management.png)
+
+Skalning / Cron regler:
+
+![alt text](images/scale.png)
+
+![alt text](images/scale_kontorstid.png)
+
+![alt text](images/scale_http.png)
 
 ### *__9. Kod__*
 
