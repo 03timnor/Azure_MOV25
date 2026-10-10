@@ -4,15 +4,15 @@ Repository: https://github.com/03timnor/Azure_MOV25
 
 *Tim Noreliusson Lingestedt, 2026-10-10*
 
-Examinationen går ut på att skapa en hyresgästportal via *Azure* åt företaget *Nordvik Fastigheter AB*. Hyresgästerna skall kunna logga in i portalen och skicka en felanmälan. Förvaltarna skall kunna hantera ärendena och ekonomi har läsande insyn. Portalen skall ha kontrollerad åtkomst. Miljön ska provisioneras som kod. Det skall även finnas automatiserat arbetsflöde kopplat till Nordsviks Microsoft 365.
+Examinationen går ut på att skapa en hyresgästportal via *Azure* åt företaget *Nordvik Fastigheter AB*. Hyresgästerna skall kunna logga in i portalen och skicka en felanmälan. Förvaltarna skall kunna hantera ärendena och ekonomi har läsande insyn. Portalen skall ha kontrollerad åtkomst. Miljön ska provisioneras som kod. Det skall även finnas automatiserat arbetsflöde kopplat till Nordviks Microsoft 365.
 
 ## __Del A__
 
-*Del A* av examinationen går ut på att man skall redogöra för de centrala *Azure* inom *Compute*, *Network* och *Storage*. Förklara virtualiseringsnivåerna *Virtual Machines (VM)*, *Containers* och *Serverless*. Man skall även beskriva vilken nivå man valt och varför.
+*Del A* av examinationen går ut på att man skall redogöra för de centrala *Azure* tjänsterna inom *Compute*, *Network* och *Storage*. Förklara virtualiseringsnivåerna *Virtual Machines (VM)*, *Containers* och *Serverless*. Man skall även beskriva vilken nivå man valt och varför.
 
 ### *__Compute__*
 
-*Compute* är processor (*vCPU*), minne som programkoden körs på.
+*Compute* är processor (*vCPU*) och minne som programkoden körs på.
 
 *Compute* kör program, bearbetar data och hanterar anrop. *Compute* innefattar tjänster som *Container*, *Virtual Machines (VM)* samt *Azure Functions*.
 
@@ -20,7 +20,7 @@ Examinationen går ut på att skapa en hyresgästportal via *Azure* åt företag
 
 Skickar trafik mellan tjänster, internet och användare. Avgör vilka som får prata med vilka och på vilken väg.
 
-I *Azure* / molnet så är nätverket programerbart. Vilket kan bidra till förbättrad säkerhet med olika regler och så vidare.
+I *Azure* / molnet så är nätverket programmerbart. Vilket kan bidra till förbättrad säkerhet med olika regler och så vidare.
 
 ### *__Storage__*
 
@@ -44,13 +44,13 @@ Lagringen är skild från *Compute*, detta gör det möjligt att till exempel st
 
 #### __Varför inte Virtual Machine (VM)?__
 
-Kostnaden består för en *Virtual Machine (VM)* även när ingen använder den. *Nordvik Fastigheter AB* har ett krav på att tåla att en instans faller behöver man minst två maskiner inklusive lastbalanserare.
+Kostnaden består för en *Virtual Machine (VM)* även när ingen använder den. *Nordvik Fastigheter AB* har ett krav på att tåla att en instans faller och då behöver man minst två maskiner inklusive lastbalanserare.
 
 En *Virtual Machine (VM)* betalar man för så länge den är i drift, även om den inte används. En *Container* betalar man för per använd sekund för *CPU* och *RAM* (till exempel *ACI* eller *Container* Apps med Consumption-profil) eller för antal noder (till exempel *AKS*). *Nordvik Fastigheter AB* använder *Container Apps* med Consumption-profil. *Container Apps* lösningen blir även billigare, främst för att *Bastion* inte behövs.
 
 *Virtual Machine (VM)* kräver mer drift / ansvar. Operativsystem, skalning, härdning och certifikat blir *Nordvik Fastigheter AB* ansvar. Det passar en organisation med 40 förvaltare och 6 anställda på ekonomi dåligt. De har heller inte någon uttalad IT-avdelning (enligt uppgiftsbeskrivningen).
 
-Bastion bör används för inloggning till en *Virtual Machine (VM)* på grund av att göra miljön säkrare. Bastion behövs inte då det inte finns någon *Virtual Machine (VM)* att logga in på. Bastion har en hög kostnad. Att använda *Container* medför inte denna kostnad och säkerheten påverkas ej negativt.
+Bastion bör användas för inloggning till en *Virtual Machine (VM)* på grund av att göra miljön säkrare. Bastion behövs inte då det inte finns någon *Virtual Machine (VM)* att logga in på. Bastion har en hög kostnad. Att använda *Container* medför inte denna kostnad och säkerheten påverkas ej negativt.
 
 Ingen tung resurskrävande applikation används. Den kräver heller inte att man har full kontroll på plattformen den körs på. Då passar *Container* bättre än *Virtual Machine (VM)*. En *Virtual Machine (VM)* blir lite "overkill" i detta fallet.
 
@@ -64,7 +64,7 @@ Functions är skapat främst för kod som körs när något händer, exempelvis 
 
 Container är en mittpunkt mellan *Virtual Machines (VM)* och *Serverless (Azure Functions)*. En mittpunkt i bland annat kontroll och drift. Det är därför den bästa utgångspunkten att börja ifrån för att sedan utvärdera miljöns behov.
 
-Man kan alltid planera för och försöka göra en hypotes vad man tror en mlijö kommer kräva eller kosta. Men man vet det aldrig säkert förrän man driftsatt miljön i praktiken.
+Man kan alltid planera för och försöka göra en hypotes vad man tror en miljö kommer kräva eller kosta. Men man vet det aldrig säkert förrän man driftsatt miljön i praktiken.
 
 Container har därför en fördel då det är en mittpunkt mellan de två andra alternativen. Det gör det enklare att börja utvärdera och en logisk startpunkt.
 
@@ -74,15 +74,15 @@ Container har därför en fördel då det är en mittpunkt mellan de två andra 
 
 - __Kostnad__
 
-*Container* skalar ned till noll utanför kontorstid. Detta uppfyller kravet om att inte betala för kapacitet som inte används under nattetid. Lösningen bör hamna under 2 500 kr med god marginal. Detta bör dock utvärderas över några veckor när *Azure* kostnadsprognos är mer säker och har data ifrån fler dagar. Även om budgeten skulle överskridas så finns går det automatiskt ett mail till ekonomiavdelningen angående detta.
+*Container* skalar ned till noll utanför kontorstid. Detta uppfyller kravet om att inte betala för kapacitet som inte används under nattetid. Lösningen bör hamna under 2 500 kr med god marginal. Detta bör dock utvärderas över några veckor när *Azure* kostnadsprognos är mer säker och har data ifrån fler dagar. Även om budgeten skulle överskridas så går det automatiskt ett mail till ekonomiavdelningen angående detta.
 
 - __Arbetskraft__
 
-*Container* lösningen sköter plattformen operativsystem och servrar. *Nordvik Fastigheter AB*. Detta passar ett företag utan en IT-avdelning (enligt uppgiftsbeskrivningen). Den drift som dock kvarstår är till exempel att bygga om imagen om ändringar uppstår, följa upp loggar och kostnader.
+ Mindre drift än till exempel *Virtual Machines (VM)* passar ett företag utan en IT-avdelning (enligt uppgiftsbeskrivningen). Den drift som dock kvarstår är till exempel att bygga om imagen om ändringar uppstår, följa upp loggar och kostnader.
 
 - __Tid__
 
-Hela miljön skrivs som kod med *Bicep* och *Dockerfile*. En ny test eller demomiljö skapas med några kommandon. Det gör så att kravet om att kunna resa en likadan / demo miljö vid behov.
+Hela miljön skrivs som kod med *Bicep* och *Dockerfile*. En ny test eller demomiljö skapas med några kommandon. Det gör så att kravet om att kunna resa en likadan / demo miljö vid behov uppfylls.
 
 - __Avvägningar__
 
@@ -94,7 +94,7 @@ Lösningen är inte helt perfekt på alla sätt. Till exempel kan regionen sakna
 
 Miljön skapas upp med hjälp av all kod och script som finns i *V41_Examination* mappen i *GitHub*. (Alla script och all kod kommer finnas längst ner i *README* filen. Det finns även i *V41_Examination* mappen som enskilda filer).
 
-Produktionsmiljön skapas upp med dessa komandon (kör dem i den ordningen de är listade, mappstruktur måste vara likadan som i *V41_Examination* mappen i *GitHub*, förutom bilderna):
+Produktionsmiljön skapas upp med dessa kommandon (kör dem i den ordningen de är listade, mappstruktur måste vara likadan som i *V41_Examination* mappen i *GitHub*, förutom bilderna):
 
 Gör alla scriptfiler i mappen körbara:
 ```bash
@@ -134,7 +134,7 @@ Portalen har en *Managed Identity* som används av både webbappen och notisjobb
 
 ![alt text](images/managed_id.png)
 
-#### __Rolltilldelningar, poralens *Managed Identity*:__
+#### __Rolltilldelningar, portalens *Managed Identity*:__
 
 | Resurs | Roll | Scope (var rollen gäller) | Vad portalen gör med den | Varför behövs den? |
 |---|---|---|---|---|
@@ -145,7 +145,7 @@ Portalen har en *Managed Identity* som används av både webbappen och notisjobb
 | Container Registry | AcrPull | Registret | Hämtar containerbilden vid start | Container Apps måste kunna hämta appens image utan lösenord. Rollen tillåter bara att hämta, inte att ladda upp eller ändra. |
 | Azure Communication Services (e-post) | Communication and Email Service Owner | Bara ACS-resursen | Skickar akuta och vanliga notismejl | Notisjobbet skickar e-post till förvaltare och den delade brevlådan. Rollen behövs för att få skicka via tjänsten. |
 
-Lagringskontot = `allowedSharedKeyAccess: false` vilket innebär att nycklar inte kan läcka. Koden loggar in med `DefaultAzureCredential` och `AZURE_CLIENT_ID`.
+Lagringskontot = `allowSharedKeyAccess: false` vilket innebär att nycklar inte kan läcka. Koden loggar in med `DefaultAzureCredential` och `AZURE_CLIENT_ID`.
 
 Storage konto *IAM*:
 
@@ -161,11 +161,11 @@ Storage konto *IAM*:
 
 #### __Least-privilege__
 
-Portalen kommer åt lagringen via en *Managed Identity* utan att behöva använda nycklar. Rollerna är begränsade till *Container* eller tabbellnivå. Hyresgäster har inga *Azure* roller alls utan ser bara sina egna ärenden via portalen. Förvaltarna ser hanterar endasy ärenden som är kopplade till deras fastigheter. Ekonomi har enbart läsande insyn i form av anonym statistik och *Cost Management Reader* för att se *Azure* kostnader (endast för resursgruppen). 
+Portalen kommer åt lagringen via en *Managed Identity* utan att behöva använda nycklar. Rollerna är begränsade till *Container* eller tabellnivå. Hyresgäster har inga *Azure* roller alls utan ser bara sina egna ärenden via portalen. Förvaltarna ser och hanterar endast ärenden som är kopplade till deras fastigheter. Ekonomi har enbart läsande insyn i form av anonym statistik och *Cost Management Reader* för att se *Azure* kostnader (endast för resursgruppen). 
 
 ### *__3. Nätverk och säkerhet__*
 
-Nätverket implementerar *Defence in depth*. Portalen nås publikt via HTTPS och är samtidigt skyddad via inloggning med *Entra* konto. Lagringskontot nås av portalen via *Private endpoints* i ett eget virtuellt nätverk som innehåller privata DNS-zoner. När miljön skapas upp är en administratörs IP-adress tillåten publik åtkomst till lagringen. Detta bör dock tas bort och publik åtkomst bör stängas av helt när man inte behöver det längre. Lagringskontot har delade nycklar avstängt har TLS 1.2 som krav. Portalen når lagringen via *Managed Identity* och applikationen kontrollerar roll och fastighet vid varje anrop.
+Nätverket implementerar *Defence in depth*. Portalen nås publikt via HTTPS och är samtidigt skyddad via inloggning med *Entra* konto. Lagringskontot nås av portalen via *Private endpoints* i ett eget virtuellt nätverk som innehåller privata DNS-zoner. När miljön skapas upp är en administratörs IP-adress tillåten publik åtkomst till lagringen. Detta bör dock tas bort och publik åtkomst bör stängas av helt när man inte behöver det längre. Lagringskontot har delade nycklar avstängt och har TLS 1.2 som krav. Portalen når lagringen via *Managed Identity* och applikationen kontrollerar roll och fastighet vid varje anrop.
 
 #### __Lager__
 
@@ -186,7 +186,7 @@ Nätverket implementerar *Defence in depth*. Portalen nås publikt via HTTPS och
 ### *__3. Storage__*
 
 Portalens dokument och bilder lagras i ett *Azure* storage konto med två huvudsakliga blob containrar. *avtal* för dokument, *felanmalan* för bilder och ärendena sparas i en tabell (*arenden*). Om en hyresgäst skickar in en felanmälan med en bild så sparar portalen först bilden i *felanmalan* under en sökväg som baseras på fastighet och ärende-id. Efter detta sparas ärendet som en rad i tabellen (*arenden*). Till sist läggs ett meddelande i en kö som utlöser notiser.
-Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exempelvis  avstängda delade nycklar, avstängd publik åtkomst (efter installation), *Private Endpoints*, TLS 1.2 och att portalen når storge via en *Managed Identity*.
+Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exempelvis  avstängda delade nycklar, avstängd publik åtkomst (efter installation), *Private Endpoints*, TLS 1.2 och att portalen når storage via en *Managed Identity*.
 
 #### __Struktur__
 
@@ -226,7 +226,7 @@ Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exemp
 
 ### *__4. Automation och integration__*
 
-Om en felanmälan skapas så lägger portalen ett meddelande i en kö. Ett *Container Apps*-jobb läser kön och gör två saker. Om kategorin på ärendet klassas som akut skickar det ett mail direkt till förvaltarens epost via *Azure Communications Services*. Oavsätt om kategorin är akut eller inte så anropas ett *PowerAutomate* flöde via en *HTTP*-trigger. Flödet skapar en post i en *SharePoint* lista, skickar mail om att en ny felanmälan till en delad brevlåda som förvaltarna har tillgång till och skickar ett mail till hyresgästen som anmälde att felanmälan har skapats.
+Om en felanmälan skapas så lägger portalen ett meddelande i en kö. Ett *Container Apps*-jobb läser kön och gör två saker. Om kategorin på ärendet klassas som akut skickar det ett mail direkt till förvaltarens epost via *Azure Communications Services*. Oavsett om kategorin är akut eller inte så anropas ett *PowerAutomate* flöde via en *HTTP*-trigger. Flödet skapar en post i en *SharePoint* lista, skickar mail om att en ny felanmälan till en delad brevlåda som förvaltarna har tillgång till och skickar ett mail till hyresgästen som anmälde att felanmälan har skapats.
 
 __Flödet från anmälan till notis__
 
@@ -273,11 +273,12 @@ Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
 - Efter nedskalning till noll blir första anropet långsamare (kallstart) detta är ett medvetet val för att hålla nere kostnaden.
 
-- En HTTP-skalningsregel lägger till instanser vid 20 samtidiga anrop per instans upp till 10 instanser. Detta ger utrymme till över 120 samtidiga användare.
+- En HTTP-skalningsregel lägger till en ny instans när en instans får fler än 20 samtidiga anrop, upp till högst 10 instanser. Det ger kapacitet till cirka 200 samtidiga anrop.
+
 
 #### __Anmälningar och akuta fel__
 
-- För varje anmälan sparas uppgifter och bild, en rad skapas i tabellen *arenden* och *PowerAutomate* skpar en post i *SharePoint* listan och mailar.
+- För varje anmälan sparas uppgifter och bild, en rad skapas i tabellen *arenden* och *PowerAutomate* skapar en post i *SharePoint* listan och mailar.
 
 - För varje akut anmälan så går det mail direkt till förvaltaren via *Azure Communication Services*, oberoende av flödet.
 
@@ -301,13 +302,13 @@ Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
 #### __Tillväxt, test eller demomiljö__
 
-- Om fastigheter tillkommer så läggs de in som rader i tabbellen *fastigheter*. Ingen ny infrastruktur behövs.
+- Om fastigheter tillkommer så läggs de in som rader i tabellen *fastigheter*. Ingen ny infrastruktur behövs.
 
 - Demomiljö kan startas upp `ENVIRONMENT_TYPE=demo`.
 
 ### __Säkerhet__
 
-- Lagringen är ej publik åtkomligt (stäng av efter installation / konfiguration). Ingen anonym blob-åtkomst och delade nycklar är av.
+- Lagringen är ej publik åtkomlig (stäng av efter installation / konfiguration). Ingen anonym blob-åtkomst och delade nycklar är av.
 
 - Åtkomst per roll. Hyresgäst, förvaltare och ekonomi styrs i appen (rollkontroll och filtrering per fastighet). Portalen kommer åt lagringen via *Managed Identity*.
 
@@ -317,7 +318,7 @@ Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
 - Alla resurser är taggade.
 
-- Ekonomi kommer åt kan läsa *Azure Cost Management* på resursgruppen och kan följa dess *Azure* kostnader.
+- Ekonomi kan läsa *Azure Cost Management* på resursgruppen och kan följa dess *Azure* kostnader.
 
 #### __Namngivning__
 
@@ -348,7 +349,7 @@ Hur miljön har dokumenterats och beskrivts i tidigare steg. Men en kortfattad t
 | Budget och kostnadsroll (valfria) | – | Budgetvarning samt Cost Management Reader för ekonomi |
 | Utanför Azure | – | Power Automate-flöde (SharePoint-lista, mail till delad brevlåda och till hyresgästen) och Entra-appregistrering för inloggning |
 
-Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s*  behov och önskemål. Sen behövde jag ha i åtankte vad jag realistiskt kunde hinna med på cirka 7 dagar. Det finns saker man hade kunnat utveckla om man hade mer tid, ett exempel kan vara en bättre lösning på hur avtal och dokument laddas upp till storage. I dagsläget måste man gå in i bloben och göra det, och det är det bara jag som kan göra (på grund av behörgheter). Man hade kunnat integrera detta i applikationen / webbsidan, men detta fick prioriteras bort då *Nordvik Fastigheter AB:s* uttryckta behov och önskemål gick före och tog upp den tid som fanns tillgänglig.
+Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s*  behov och önskemål. Sen behövde jag ha i åtanke vad jag realistiskt kunde hinna med på cirka 7 dagar. Det finns saker man hade kunnat utveckla om man hade mer tid, ett exempel kan vara en bättre lösning på hur avtal och dokument laddas upp till storage. I dagsläget måste man gå in i bloben och göra det, och det är det bara jag som kan göra (på grund av behörigheter). Man hade kunnat integrera detta i applikationen / webbsidan, men detta fick prioriteras bort då *Nordvik Fastigheter AB:s* uttryckta behov och önskemål gick före och tog upp den tid som fanns tillgänglig.
 
 Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostanden inom bugetens ram . Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
 
@@ -384,7 +385,7 @@ Flödet skickar e-postbekräftelse till hyresgästen:
 
 ![alt text](images/maintenance_request_email_customer.png)
 
-Flödet skickar mail till en delad mailbox som alla förvaltare kan läsa. Oavsätt om felanmälan är akut eller inte:
+Flödet skickar mail till en delad mailbox som alla förvaltare kan läsa. Oavsett om felanmälan är akut eller inte:
 
 ![alt text](images/not_ungent_maintenance_request_email_employee.png)
 
