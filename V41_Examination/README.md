@@ -124,7 +124,7 @@ ENVIRONMENT_TYPE=demo DEMO_MODE=true ./V41_deploy.sh
 
 *__OBS!__* Ha alltid med `NOTIS_TRIGGER=schedule` innan `./V41_deploy.sh`. Detta fixar så att notisjobbet fungerar som det ska.
 
-*__OBS!__* Fyll i uppgifter i *V41_main.bicepparm* där det behövs. Där kan man även ändra olika parametrar för att ändra hur miljön ska se ut och så vidare. Parameter *param delatBrevladaMail* skall inte fyllas i då *PowerAutomate* flöde används istället.
+*__OBS!__* Fyll i uppgifter i *V41_main.bicepparam* där det behövs. Där kan man även ändra olika parametrar för att ändra hur miljön ska se ut och så vidare. Parameter *param delatBrevladaMail* skall inte fyllas i då *PowerAutomate* flöde används istället.
 
 *__OBS!__* Fyll i uppgifter i *V41_users.csv* och *V41_properties.csv*. (*V41_users.csv* skapar inte användare, de måste finnas i *Entra* innan det körs).
 
@@ -353,7 +353,7 @@ Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s* behov och 
 
 Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostnaden inom budgetens ram. Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
 
-Lösningen återskapas även med kod. Kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.bicepparm*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske dock inte *GitHub* Repository ska vara publikt).
+Lösningen återskapas även med kod. Kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.bicepparam*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske dock inte *GitHub* Repository ska vara publikt).
 
 ### *__8. Verifiering__*
 
@@ -1485,7 +1485,7 @@ output environmentDefaultDomain string = nordvik.outputs.environmentDefaultDomai
 output mailSender string = nordvik.outputs.mailSender
 ```
 
-#### __V41_main.bicepparm__
+#### __V41_main.bicepparam__
 
 ```bicep
 using 'V41_main.bicep'
