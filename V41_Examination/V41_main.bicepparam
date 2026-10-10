@@ -41,6 +41,7 @@ param oidcClientId = readEnvironmentVariable('OIDC_CLIENT_ID', '')
 param delatBrevladaMail = ''
 
 // Extra recipients for urgent reports, e.g. 'jour@nordvik.example'
+// NOT TESTED.
 param akutMailExtra = ''
 
 // Cost allocation tags
