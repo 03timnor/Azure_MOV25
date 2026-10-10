@@ -183,10 +183,10 @@ Nätverket implementerar *Defence in depth*. Portalen nås publikt via HTTPS och
 
 ![alt text](images/private_endpoint.png)
 
-### *__3. Storage__*
+### *__4. Storage__*
 
 Portalens dokument och bilder lagras i ett *Azure* storage konto med två huvudsakliga blob containrar. *avtal* för dokument, *felanmalan* för bilder och ärendena sparas i en tabell (*arenden*). Om en hyresgäst skickar in en felanmälan med en bild så sparar portalen först bilden i *felanmalan* under en sökväg som baseras på fastighet och ärende-id. Efter detta sparas ärendet som en rad i tabellen (*arenden*). Till sist läggs ett meddelande i en kö som utlöser notiser.
-Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exempelvis  avstängda delade nycklar, avstängd publik åtkomst (efter installation), *Private Endpoints*, TLS 1.2 och att portalen når storage via en *Managed Identity*.
+Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exempelvis avstängda delade nycklar, avstängd publik åtkomst (efter installation), *Private Endpoints*, TLS 1.2 och att portalen når storage via en *Managed Identity*.
 
 #### __Struktur__
 
@@ -224,7 +224,7 @@ Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exemp
 | 4. Ärendet sparas | Fälten och sökvägen till bilden sparas som en rad | Tabellen `arenden` |
 | 5. Notis köas | Ett meddelande läggs i kön och startar notisjobbet. Misslyckas det är anmälan ändå sparad. | Kön `notiser` |
 
-### *__4. Automation och integration__*
+### *__5. Automation och integration__*
 
 Om en felanmälan skapas så lägger portalen ett meddelande i en kö. Ett *Container Apps*-jobb läser kön och gör två saker. Om kategorin på ärendet klassas som akut skickar det ett mail direkt till förvaltarens epost via *Azure Communications Services*. Oavsett om kategorin är akut eller inte så anropas ett *PowerAutomate* flöde via en *HTTP*-trigger. Flödet skapar en post i en *SharePoint* lista, skickar mail om att en ny felanmälan till en delad brevlåda som förvaltarna har tillgång till och skickar ett mail till hyresgästen som anmälde att felanmälan har skapats.
 
@@ -263,7 +263,7 @@ Flöde (*nordvik_maintenance_request*):
 
 Flödets *JSON* data finns tillsammans med övrig kod längst ned i *README* filen.
 
-### *__5. Nordvik Fastigheter AB:s behov__*
+### *__6. Nordvik Fastigheter AB:s behov__*
 
 Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
@@ -326,7 +326,7 @@ Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
 - Löser ett unikt namn där om det krävs, till exempel för lagringskontot.
 
-### *__6. Dokumentation__*
+### *__7. Dokumentation__*
 
 Hur miljön har dokumenterats och beskrivts i tidigare steg. Men en kortfattad tabell om innehållet finns nedan.
 
@@ -351,11 +351,11 @@ Hur miljön har dokumenterats och beskrivts i tidigare steg. Men en kortfattad t
 
 Miljön planerades i största del utifrån *Nordvik Fastigheter AB:s* behov och önskemål. Sen behövde jag ha i åtanke vad jag realistiskt kunde hinna med på cirka 7 dagar. Det finns saker man hade kunnat utveckla om man hade mer tid, ett exempel kan vara en bättre lösning på hur avtal och dokument laddas upp till storage. I dagsläget måste man gå in i bloben och göra det, och det är det bara jag som kan göra (på grund av behörigheter). Man hade kunnat integrera detta i applikationen / webbsidan, men detta fick prioriteras bort då *Nordvik Fastigheter AB:s* uttryckta behov och önskemål gick före och tog upp den tid som fanns tillgänglig.
 
-Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostanden inom budgetens ram. Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
+Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösningen är implementerad bör den utvärderas under en tid. Man bör ställa frågor som: Kan den optimeras, bli säkrare och håller den kostnaden inom budgetens ram. Efter en tids utvärdering kanske man till och med kommer fram till att man behöver en annan nivå (*Virtual Machines (VM)* eller *Serverless*).
 
 Lösningen återskapas även med kod. Kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.bicepparm*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske dock inte *GitHub* Repository ska vara publikt).
 
-### *__7. Verifiering__*
+### *__8. Verifiering__*
 
 Hyresgäst kan skicka felanmälningar:
 
@@ -475,7 +475,7 @@ Lifecycle management:
 
 ![alt text](images/lifecycle_management.png)
 
-### *__8. Kod__*
+### *__9. Kod__*
 
 #### __Dockerfile__
 
