@@ -122,6 +122,8 @@ För att starta en demomiljö kör man:
 ENVIRONMENT_TYPE=demo DEMO_MODE=true ./V41_deploy.sh
 ```
 
+*__OBS!__* Ha alltid med `NOTIS_TRIGGER=schedule` innan `./V41_deploy.sh`. Detta fixar så att notisjobbet fungerar som det ska.
+
 *__OBS!__* Fyll i uppgifter i *V41_main.biceparm* där det behövs. Där kan man även ändra olika parametrar för att ändra hur miljön ska se ut och så vidare. Parameter *param delatBrevladaMail* skall inte fyllas i då *PowerAutomate* flöde används istället.
 
 *__OBS!__* Fyll i uppgifter i *V41_users.csv* och *V41_properties.csv*. (*V41_users.csv* skapar inte användare, de måste finnas i *Entra* innan det körs).
@@ -181,7 +183,7 @@ Nätverket implementerar *Defence in depth*. Portalen nås publikt via HTTPS och
 
 ![alt text](images/private_endpoint.png)
 
-### *__4. Storage__*
+### *__3. Storage__*
 
 Portalens dokument och bilder lagras i ett *Azure* storage konto med två huvudsakliga blob containrar. *avtal* för dokument, *felanmalan* för bilder och ärendena sparas i en tabell (*arenden*). Om en hyresgäst skickar in en felanmälan med en bild så sparar portalen först bilden i *felanmalan* under en sökväg som baseras på fastighet och ärende-id. Efter detta sparas ärendet som en rad i tabellen (*arenden*). Till sist läggs ett meddelande i en kö som utlöser notiser.
 Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exempelvis  avstängda delade nycklar, avstängd publik åtkomst (efter installation), *Private Endpoints*, TLS 1.2 och att portalen når storge via en *Managed Identity*.
@@ -222,7 +224,7 @@ Lagringen är skyddad via saker som har nämts i de tidigare punkterna som exemp
 | 4. Ärendet sparas | Fälten och sökvägen till bilden sparas som en rad | Tabellen `arenden` |
 | 5. Notis köas | Ett meddelande läggs i kön och startar notisjobbet. Misslyckas det är anmälan ändå sparad. | Kön `notiser` |
 
-### *__6. Automation och integration__*
+### *__4. Automation och integration__*
 
 Om en felanmälan skapas så lägger portalen ett meddelande i en kö. Ett *Container Apps*-jobb läser kön och gör två saker. Om kategorin på ärendet klassas som akut skickar det ett mail direkt till förvaltarens epost via *Azure Communications Services*. Oavsätt om kategorin är akut eller inte så anropas ett *PowerAutomate* flöde via en *HTTP*-trigger. Flödet skapar en post i en *SharePoint* lista, skickar mail om att en ny felanmälan till en delad brevlåda som förvaltarna har tillgång till och skickar ett mail till hyresgästen som anmälde att felanmälan har skapats.
 
@@ -261,7 +263,7 @@ Flöde (*nordvik_maintenance_request*):
 
 Flödets *JSON* data finns tillsammans med övrig kod längst ned i *README* filen.
 
-### *__7. Nordvik Fastigheter AB:s behov__*
+### *__5. Nordvik Fastigheter AB:s behov__*
 
 Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
@@ -321,9 +323,9 @@ Hur miljön uppfyller Nordvik Fastigheter AB:s behov:
 
 - Följer mönstret *typ-företag-syfte* till exempel *rg-nordvik-prod*.
 
-- Slumpar löpnummer om det behövs till exempel för lagringskontot *stnordvikLÖPNUMMER*
+- Löser ett unikt namn där om det krävs, till exempel för lagringskontot.
 
-### *__8. Dokumentation__*
+### *__6. Dokumentation__*
 
 Hur miljön har dokumenterats och beskrivts i tidigare steg. Men en kortfattad tabell om innehållet finns nedan.
 
@@ -352,7 +354,7 @@ Lösningen implementeras som IaC som beskrevs i steg 1 av del B. Efter lösninge
 
 Lösningen återskpas även med kod, kod som har parametrar om något behövs ändras tills nästa gång. Skall resursgruppen ha ett annat namn? Ändra parametern i *V41_main.biceparm*. Koden finns versionshanterad i GitHub (om det är i skarp miljö kanske den dock inte ens GitHub Repository skall vara publikt).
 
-### *__9. Verifiering__*
+### *__7. Verifiering__*
 
 Hyresgäst kan skicka felanmälningar:
 
@@ -472,7 +474,7 @@ Lifecycle management:
 
 ![alt text](images/lifecycle_management.png)
 
-### *__10. Kod__*
+### *__8. Kod__*
 
 #### __Dockerfile__
 
